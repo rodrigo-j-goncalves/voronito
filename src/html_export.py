@@ -59,8 +59,9 @@ _TEMPLATE = """<!DOCTYPE html>
 <title>{title}</title>
 <script src="{d3_cdn}"></script>
 <style>
-  html, body {{ margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, sans-serif; }}
-  #chart-container {{ width: 100%; max-width: {width}px; margin: 0 auto; }}
+  html, body {{ margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }}
+  body {{ min-height: 100vh; display: flex; align-items: center; justify-content: center; }}
+  #chart-container {{ width: 100%; max-width: {width}px; }}
   svg {{ width: 100%; height: auto; display: block; }}
   .cell {{
     stroke: #FFFFFF;
@@ -70,7 +71,14 @@ _TEMPLATE = """<!DOCTYPE html>
     transition: opacity 150ms ease, stroke-width 150ms ease;
   }}
   .cell.dimmed {{ opacity: 0.35; }}
-  .cell.hovered {{ stroke: #222222; stroke-width: 3; }}
+  #hover-highlight {{
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }}
   .cell-label {{
     font-family: "Helvetica Neue", Arial, sans-serif;
     text-anchor: middle;
@@ -141,6 +149,8 @@ const labelSel = svg.selectAll("text.cell-label")
   .attr("clip-path", d => "url(#clip-" + d.id + ")")
   .text(d => d.name);
 
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
 function textColorFor(hex) {{
   hex = hex.replace("#", "");
   const r = parseInt(hex.substring(0, 2), 16);
@@ -157,8 +167,8 @@ function fmtValue(v) {{
 cellSel
   .on("mouseenter", function (event, d) {{
     cellSel.classed("dimmed", o => o.parentId !== d.parentId);
-    d3.select(this).classed("dimmed", false).classed("hovered", true).raise();
-    labelSel.raise();
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
 
     tooltip.html(
       '<div class="tt-path">' + d.breadcrumb + '</div>' +
@@ -173,7 +183,8 @@ cellSel
       .style("top", (event.clientY + 16) + "px");
   }})
   .on("mouseleave", function () {{
-    cellSel.classed("dimmed", false).classed("hovered", false);
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
     tooltip.style("opacity", 0);
   }});
 </script>

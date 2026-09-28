@@ -1,4 +1,4 @@
-# voronoi-treemaps
+# voronito
 
 Command-line pipeline that turns a hierarchical CSV into a voronoi treemap:
 a Python orchestrator drives a headless Node.js computation engine
