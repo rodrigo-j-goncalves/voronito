@@ -1,12 +1,12 @@
 id,parent_id,name,value,color,description
 Companies,,World's 30 Largest Companies,,,"Reproduction of Visual Capitalist's ""World's 30 Largest Companies: Profit per $100 in Revenue"" (source: Fortune Global 500, 2026 fiscal data, via visualcapitalist.com). Wedge size = profit per $100 in revenue (2026), the figure displayed on each cell. Each leaf's description carries the underlying annual profit for reference."
-Energy,Companies,Energy,,#F5A623,
-Finance,Companies,Finance,,#1B6B45,
-Auto,Companies,Auto,,#C0504D,
-Tech,Companies,Tech,,#17C3A2,
-Health,Companies,Health,,#E8C547,
-Retail,Companies,Retail,,#8E6BAE,
-Utilities,Companies,Utilities,,#A9B23B,
+Energy,Companies,Energy,,#D55E00,
+Finance,Companies,Finance,,#009E73,
+Auto,Companies,Auto,,#E69F00,
+Tech,Companies,Tech,,#56B4E9,
+Health,Companies,Health,,#CC79A7,
+Retail,Companies,Retail,,#0072B2,
+Utilities,Companies,Utilities,,#F0E442,
 RealEstate,Companies,Real Estate,,#9B9B9B,
 ,Tech,Nvidia,55.60,,USA. $120B annual profit.
 ,Tech,Microsoft,36.10,,USA. $102B annual profit.
