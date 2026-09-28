@@ -1,4 +1,6 @@
 # voronito
+**Version:** 0.2.5 ([`package.json`](package.json) is the source of truth — bump both together)
+
 A 'pretty Voronoi treemap'
 
 
