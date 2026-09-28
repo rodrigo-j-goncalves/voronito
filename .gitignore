@@ -3,6 +3,7 @@
 
 # Always allow
 !.gitignore
+!README.md
 !voronoi-treemaps.md
 
 # Project config
