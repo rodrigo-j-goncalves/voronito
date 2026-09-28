@@ -11,15 +11,19 @@
 !package-lock.json
 !requirements.txt
 
-# Source code
-!src/
-!src/**
-src/__pycache__/
+# 01_data: raw inputs (CSVs, SVG masks)
+!01_data/
+!01_data/A_raw/
+!01_data/A_raw/**
 
-# Data
-!data/
-!data/**
+# 02_code: all source (Python + JS)
+!02_code/
+!02_code/A_analysis/
+!02_code/A_analysis/**
+02_code/A_analysis/__pycache__/
 
-# Committed example outputs (output/ itself stays a gitignored scratch/build area)
-!examples/
-!examples/**
+# 03_output: committed example figures only.
+# 03_output/scratch/ stays gitignored -- a personal, regenerable run area.
+!03_output/
+!03_output/A_figures/
+!03_output/A_figures/**

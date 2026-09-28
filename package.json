@@ -4,7 +4,7 @@
   "private": true,
   "description": "Voronito: headless Node.js computation engine for hierarchical voronoi treemaps (SVG/HTML export pipeline).",
   "type": "commonjs",
-  "main": "src/compute_treemap.js",
+  "main": "02_code/A_analysis/compute_treemap.js",
   "dependencies": {
     "d3": "^7.9.0",
     "d3-hierarchy": "^3.1.2",

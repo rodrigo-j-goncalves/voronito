@@ -3,17 +3,17 @@
 
 Example:
   python voronoi_treemap.py \\
-    --input data/biomass.csv \\
-    --output-svg output/biomass.svg \\
-    --output-html output/biomass.html \\
+    --input 01_data/A_raw/biomass.csv \\
+    --output-svg 03_output/scratch/biomass.svg \\
+    --output-html 03_output/scratch/biomass.html \\
     --shape pentagon
 
   # or an arbitrary clip polygon extracted from a closed SVG silhouette:
-  python voronoi_treemap.py --input data/biomass.csv --output-svg output/biomass.svg \\
-    --shape masks/leaf.svg#outline
+  python voronoi_treemap.py --input 01_data/A_raw/biomass.csv --output-svg 03_output/scratch/biomass.svg \\
+    --shape 01_data/A_raw/mask1.svg
 
-  # or generate every built-in shape in one go (output/biomass_circle.svg, _rectangle.svg, ...):
-  python voronoi_treemap.py --input data/biomass.csv --output-svg output/biomass.svg --all-shapes
+  # or generate every built-in shape in one go (biomass_circle.svg, _rectangle.svg, ...):
+  python voronoi_treemap.py --input 01_data/A_raw/biomass.csv --output-svg 03_output/scratch/biomass.svg --all-shapes
 """
 
 from __future__ import annotations

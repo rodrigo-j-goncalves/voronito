@@ -6,6 +6,20 @@ a Python orchestrator drives a headless Node.js computation engine
 **SVG** or a self-contained, D3-driven interactive **HTML** (embeddable in
 Quarto via `<iframe>`).
 
+## Folder structure
+
+Follows the [project-template](https://github.com/rodrigo-j-goncalves/project-template) convention:
+
+```
+01_data/A_raw/       input CSVs and SVG masks -- never modified by scripts
+02_code/A_analysis/  all source (Python + JS)
+03_output/A_figures/ committed, pre-generated example outputs
+03_output/scratch/   gitignored scratch area for your own runs
+```
+
+`package.json`, `requirements.txt`, and this README stay at the repo root
+(tooling manifests, not project data/code/output).
+
 ## Setup
 
 Requires Node.js/npm and Python 3.
@@ -19,10 +33,10 @@ python3 -m venv .venv
 ## Usage
 
 ```bash
-.venv/bin/python src/voronoi_treemap.py \
-  --input data/biomass.csv \
-  --output-svg output/biomass.svg \
-  --output-html output/biomass.html \
+.venv/bin/python 02_code/A_analysis/voronoi_treemap.py \
+  --input 01_data/A_raw/biomass.csv \
+  --output-svg 03_output/scratch/biomass.svg \
+  --output-html 03_output/scratch/biomass.html \
   --shape circle \
   --unit "Gt C"
 ```
@@ -60,33 +74,34 @@ Root,,Root Category,,,
 
 ## Demo datasets
 
-- `data/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
-- `data/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
-- `data/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
+- `01_data/A_raw/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
+- `01_data/A_raw/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
+- `01_data/A_raw/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
+- `01_data/A_raw/mask1.svg` — a hand-drawn concave silhouette, for testing/demonstrating `--shape mask1.svg`.
 
-`examples/` holds pre-generated outputs for all three, in every built-in shape
-(`--all-shapes`) as both SVG and HTML — e.g. `examples/companies_hexagon.svg`.
-Unlike `output/` (a gitignored scratch area for your own runs), `examples/`
-is committed, so these are viewable without regenerating them. Regenerate
-with, e.g.:
+`03_output/A_figures/` holds pre-generated outputs for all three CSV datasets,
+in every built-in shape (`--all-shapes`) as both SVG and HTML — e.g.
+`03_output/A_figures/companies_hexagon.svg`. Unlike `03_output/scratch/` (a
+gitignored area for your own runs), `A_figures/` is committed, so these are
+viewable without regenerating them. Regenerate with, e.g.:
 
 ```bash
-.venv/bin/python src/voronoi_treemap.py --input data/companies.csv \
-  --output-svg examples/companies.svg --output-html examples/companies.html \
+.venv/bin/python 02_code/A_analysis/voronoi_treemap.py --input 01_data/A_raw/companies.csv \
+  --output-svg 03_output/A_figures/companies.svg --output-html 03_output/A_figures/companies.html \
   --all-shapes --unit "per \$100 revenue" --title "World's 30 Largest Companies"
 ```
 
 ## Architecture
 
 ```
-src/
+02_code/A_analysis/
   voronoi_treemap.py   CLI entry point
   hierarchy.py          CSV -> nested tree, id resolution
   colors.py              Okabe-Ito palette + shade assignment
   clip_svg.py            arbitrary polygon extraction from an SVG mask (--shape mask.svg)
   engine.py               subprocess bridge to compute_treemap.js
   compute_treemap.js     headless Node engine (d3-voronoi-treemap)
-  geometry.py             shared tree+geometry merge, label fit/sizing
+  geometry.py             shared tree+geometry merge, label fit/sizing, bounding box
   svg_export.py           static SVG renderer
   html_export.py          interactive D3/HTML renderer
 ```
