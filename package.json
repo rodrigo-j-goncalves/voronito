@@ -1,0 +1,13 @@
+{
+  "name": "voronoi-treemaps",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless Node.js computation engine for hierarchical voronoi treemaps (SVG/HTML export pipeline).",
+  "type": "commonjs",
+  "main": "src/compute_treemap.js",
+  "dependencies": {
+    "d3": "^7.9.0",
+    "d3-hierarchy": "^3.1.2",
+    "d3-voronoi-treemap": "^1.1.2"
+  }
+}

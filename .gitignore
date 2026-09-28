@@ -1,0 +1,20 @@
+# Exclude everything by default; explicitly allow tracked paths below.
+/*
+
+# Always allow
+!.gitignore
+!voronoi-treemaps.md
+
+# Project config
+!package.json
+!package-lock.json
+!requirements.txt
+
+# Source code
+!src/
+!src/**
+src/__pycache__/
+
+# Data
+!data/
+!data/**

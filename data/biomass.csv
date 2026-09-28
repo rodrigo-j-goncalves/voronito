@@ -1,0 +1,19 @@
+id,parent_id,name,value,color,description
+LivingEarth,,Living Earth,,,"Global biomass distribution by taxonomic/domain group (Bar-On, Phillips & Milo, PNAS 2018). Values in Gt C, approximate."
+,LivingEarth,Plants,450,#009E73,"Land plants; overwhelmingly the largest biomass pool on Earth, mostly cellulose in vascular tissue."
+,LivingEarth,Bacteria,70,#0072B2,Includes both terrestrial (mostly deep subsurface) and marine bacteria.
+,LivingEarth,Fungi,12,#CC79A7,Includes free-living and symbiotic fungi in soil and marine environments.
+,LivingEarth,Archaea,7,#E69F00,Largely deep subsurface communities; taxonomically distinct from Bacteria.
+,LivingEarth,Protists,4,#56B4E9,Single-celled eukaryotes including algae and other microbial eukaryotes.
+Animals,LivingEarth,Animals,,#D55E00,Sum of animal subgroup biomass below.
+,LivingEarth,Viruses,0.2,#F0E442,Estimated viral biomass across environments.
+,Animals,Arthropods,1.0,,"Mostly marine arthropods (e.g. copepods, krill); largest animal subgroup by biomass."
+,Animals,Fish,0.7,,Marine and freshwater fish.
+,Animals,Mollusks,0.2,,"Includes bivalves, gastropods, cephalopods."
+,Animals,Annelids,0.2,,"Segmented worms, including earthworms."
+,Animals,Cnidarians,0.1,,"Jellyfish, corals, and relatives."
+,Animals,Livestock,0.1,,"Domesticated mammals raised by humans (cattle, pigs, etc.)."
+,Animals,Humans,0.06,,Global human biomass.
+,Animals,Nematodes,0.02,,Roundworms; extremely numerous but small individual mass.
+,Animals,Wild mammals,0.007,,All non-domesticated mammals combined.
+,Animals,Wild birds,0.002,,All wild bird species combined.
