@@ -78,6 +78,7 @@ Root,,Root Category,,,
 - `01_data/A_raw/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
 - `01_data/A_raw/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
 - `01_data/A_raw/mask1.svg` — a hand-drawn concave silhouette, for testing/demonstrating `--shape mask1.svg`.
+- `01_data/A_raw/mask_teardrop.svg`, `mask_leaf.svg`, `mask_bullet.svg` — convex real-object silhouettes (a raindrop, a simple leaf with no stem notch, a bullet pointing right), for `--shape mask_<name>.svg#<id>`.
 
 `03_output/A_figures/` holds pre-generated outputs for all three CSV datasets,
 in every built-in shape (`--all-shapes`) as both SVG and HTML — e.g.

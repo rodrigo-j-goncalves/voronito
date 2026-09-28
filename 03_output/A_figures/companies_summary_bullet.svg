@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 293.385 792 213.231" width="792" height="213.231">
+  <defs>
+    <style>
+      .cell { stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }
+      .cell-label { font-family: "Helvetica Neue", Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <clipPath id="clip-Energy"><path d="M483.41,322.29 L471.63,496.92 L538.46,496.92 L554.67,496.71 L570.09,496.08 L584.76,495.01 L586.72,494.79 L551.57,316.94 Z"/></clipPath>
+    <clipPath id="clip-Finance"><path d="M586.72,494.79 L598.72,493.49 L612.02,491.51 L624.70,489.07 L636.79,486.15 L648.34,482.74 L659.40,478.84 L670.00,474.42 L680.18,469.49 L689.99,464.02 L699.47,458.02 L706.90,452.72 L714.88,353.49 L708.66,348.53 L699.47,341.98 L689.99,335.98 L680.18,330.51 L670.00,325.58 L659.40,321.16 L648.34,317.26 L636.79,313.85 L624.70,310.93 L612.02,308.49 L598.72,306.51 L584.76,304.99 L570.09,303.92 L561.10,303.55 L551.57,316.94 Z"/></clipPath>
+    <clipPath id="clip-Tech"><path d="M67.40,431.76 L87.68,496.92 L471.63,496.92 L483.41,322.29 L476.34,303.08 L88.06,303.08 L80.47,321.66 Z"/></clipPath>
+    <clipPath id="clip-Utilities"><path d="M554.67,303.29 L538.46,303.08 L476.34,303.08 L483.41,322.29 L551.57,316.94 L561.10,303.55 Z"/></clipPath>
+  </defs>
+  <g id="voronoi-treemap">
+      <g id="group-Companies">
+        <path id="cell-Energy" class="cell" d="M483.41,322.29 L471.63,496.92 L538.46,496.92 L554.67,496.71 L570.09,496.08 L584.76,495.01 L586.72,494.79 L551.57,316.94 Z" fill="#D55E00">
+          <title>Energy: 43.9 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="524.13" y="415.64" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Energy)">Energy</text>
+        <path id="cell-Finance" class="cell" d="M586.72,494.79 L598.72,493.49 L612.02,491.51 L624.70,489.07 L636.79,486.15 L648.34,482.74 L659.40,478.84 L670.00,474.42 L680.18,469.49 L689.99,464.02 L699.47,458.02 L706.90,452.72 L714.88,353.49 L708.66,348.53 L699.47,341.98 L689.99,335.98 L680.18,330.51 L670.00,325.58 L659.40,321.16 L648.34,317.26 L636.79,313.85 L624.70,310.93 L612.02,308.49 L598.72,306.51 L584.76,304.99 L570.09,303.92 L561.10,303.55 L551.57,316.94 Z" fill="#009E73">
+          <title>Finance: 62.6 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="632.80" y="395.02" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Finance)">Finance</text>
+        <path id="cell-Auto" class="cell" d="M40.00,432.43 L67.40,431.76 L80.47,321.66 L40.00,317.48 Z" fill="#E69F00">
+          <title>Auto: 9.9 per $100 revenue</title>
+        </path>
+        <path id="cell-Tech" class="cell" d="M67.40,431.76 L87.68,496.92 L471.63,496.92 L483.41,322.29 L476.34,303.08 L88.06,303.08 L80.47,321.66 Z" fill="#56B4E9">
+          <title>Tech: 207.9 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="276.92" y="399.67" font-size="20.0" fill="#111111" clip-path="url(#clip-Tech)">Tech</text>
+        <path id="cell-Health" class="cell" d="M708.66,451.47 L717.60,444.35 L726.33,436.66 L734.89,428.40 L743.33,419.54 L751.69,410.07 L760.00,400.00 L751.69,389.93 L743.33,380.46 L734.89,371.60 L726.33,363.34 L717.60,355.65 L714.88,353.49 L706.90,452.72 Z" fill="#CC79A7">
+          <title>Health: 7.2 per $100 revenue</title>
+        </path>
+        <path id="cell-Retail" class="cell" d="M40.00,496.92 L87.68,496.92 L67.40,431.76 L40.00,432.43 Z" fill="#0072B2">
+          <title>Retail: 6.5 per $100 revenue</title>
+        </path>
+        <path id="cell-Utilities" class="cell" d="M554.67,303.29 L538.46,303.08 L476.34,303.08 L483.41,322.29 L551.57,316.94 L561.10,303.55 Z" fill="#F0E442">
+          <title>Utilities: 2 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="515.79" y="311.14" font-size="12.4" fill="#111111" clip-path="url(#clip-Utilities)">Utilities</text>
+        <path id="cell-RealEstate" class="cell" d="M40.00,303.08 L40.00,317.48 L80.47,321.66 L88.06,303.08 Z" fill="#9B9B9B">
+          <title>Real Estate: 1.1 per $100 revenue</title>
+        </path>
+      </g>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260">
+  <path id="teardrop" fill="none" stroke="black"
+    d="M 100,20
+       C 40,90 20,140 20,170
+       A 80,80 0 1,0 180,170
+       C 180,140 160,90 100,20
+       Z" />
+</svg>

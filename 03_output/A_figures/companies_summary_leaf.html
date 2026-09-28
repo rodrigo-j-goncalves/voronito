@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World's 30 Largest Companies (by sector)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #chart-container { width: 100%; max-width: 792.0px; }
+  svg { width: 100%; height: auto; display: block; }
+  .cell {
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: opacity 150ms ease, stroke-width 150ms ease;
+  }
+  .cell.dimmed { opacity: 0.35; }
+  #hover-highlight {
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }
+  .cell-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20, 20, 20, 0.92);
+    color: #FAFAFA;
+    padding: 8px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    z-index: 10;
+  }
+  #tooltip .tt-name { font-weight: 600; font-size: 14px; }
+  #tooltip .tt-path { opacity: 0.75; font-size: 11.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div id="chart-container">
+  <svg viewBox="4 180 792 440">
+    <defs></defs>
+    <g id="voronoi-treemap"></g>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+const CELLS = [{"id": "Energy", "name": "Energy", "color": "#D55E00", "value": 43.9, "description": null, "d": "M673.75,306.88 L655.36,292.12 L636.73,278.58 L617.92,266.24 L598.99,255.05 L580.00,245.00 L561.01,236.04 L542.08,228.16 L523.27,221.31 L504.64,215.48 L486.25,210.62 L468.16,206.72 L458.32,205.06 L436.78,236.28 L506.35,391.92 L665.04,340.87 L674.08,307.17 Z", "centroid": [546.460011251631, 298.00120696542047], "area": 25463.00737869143, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Energy", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Finance", "name": "Finance", "color": "#009E73", "value": 62.6, "description": null, "d": "M506.35,391.92 L482.59,527.52 L529.04,576.59 L542.08,571.84 L561.01,563.95 L580.00,555.00 L598.99,544.95 L617.92,533.76 L636.73,521.41 L655.36,507.88 L673.75,493.12 L691.84,477.12 L709.57,459.84 L726.88,441.24 L728.89,438.86 L686.40,356.95 L665.04,340.87 Z", "centroid": [596.0094830984747, 453.52256459317897], "area": 36215.38220622332, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Finance", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Auto", "name": "Auto", "color": "#E69F00", "value": 9.9, "description": null, "d": "M56.29,421.30 L73.12,441.24 L90.43,459.84 L108.16,477.12 L108.73,477.63 L111.78,319.68 L108.16,322.88 L90.43,340.16 L73.12,358.76 L56.29,378.69 L40.00,400.00 Z", "centroid": [86.11216599096069, 398.92573500414596], "area": 5902.687727400343, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Auto", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Tech", "name": "Tech", "color": "#56B4E9", "value": 207.9, "description": null, "d": "M436.78,236.28 L376.63,200.92 L366.88,201.64 L349.57,203.73 L331.84,206.72 L313.75,210.63 L295.36,215.48 L276.73,221.32 L257.92,228.16 L238.99,236.04 L220.00,245.00 L201.01,255.05 L182.08,266.24 L163.27,278.58 L144.64,292.12 L126.25,306.87 L111.78,319.68 L108.73,477.63 L126.25,493.13 L144.64,507.88 L163.27,521.41 L182.08,533.76 L201.01,544.94 L220.00,555.00 L238.99,563.96 L257.92,571.84 L276.73,578.69 L295.36,584.52 L313.75,589.38 L331.84,593.28 L349.57,596.26 L366.88,598.36 L383.71,599.59 L400.00,600.00 L407.91,599.80 L482.59,527.52 L506.35,391.92 Z", "centroid": [311.34113582908236, 403.21653083080696], "area": 120454.15513925697, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Tech", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Health", "name": "Health", "color": "#CC79A7", "value": 7.2, "description": null, "d": "M743.71,421.31 L760.00,400.00 L743.71,378.69 L726.88,358.76 L709.57,340.16 L709.26,339.86 L686.40,356.95 L728.89,438.86 Z", "centroid": [723.1614620461861, 386.90186322189385], "area": 3302.9298105812486, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Health", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Retail", "name": "Retail", "color": "#0072B2", "value": 6.5, "description": null, "d": "M416.29,599.59 L433.12,598.36 L450.43,596.26 L468.16,593.28 L486.25,589.37 L504.64,584.52 L523.27,578.69 L529.04,576.59 L482.59,527.52 L407.91,599.80 Z", "centroid": [472.6737442358711, 570.2568617595091], "area": 3913.3589601287385, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Retail", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Utilities", "name": "Utilities", "color": "#F0E442", "value": 2.0, "description": null, "d": "M691.84,322.88 L674.08,307.17 L665.04,340.87 L686.40,356.95 L709.26,339.86 Z", "centroid": [684.2464401212387, 334.648916666599], "area": 1120.790532974439, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Utilities", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "RealEstate", "name": "Real Estate", "color": "#9B9B9B", "value": 1.1, "description": null, "d": "M450.43,203.73 L433.12,201.64 L416.29,200.40 L400.00,200.00 L383.71,200.41 L376.63,200.92 L436.78,236.28 L458.32,205.06 Z", "centroid": [423.29574008269714, 212.96780327119282], "area": 1454.384244743429, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Real Estate", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}];
+
+const svg = d3.select("svg g#voronoi-treemap");
+const tooltip = d3.select("#tooltip");
+
+const cellSel = svg.selectAll("path.cell")
+  .data(CELLS, d => d.id)
+  .enter()
+  .append("path")
+  .attr("class", "cell")
+  .attr("id", d => "cell-" + d.id)
+  .attr("d", d => d.d)
+  .attr("fill", d => d.color);
+
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
+const labelSel = svg.selectAll("text.cell-label")
+  .data(labeled)
+  .enter()
+  .append("text")
+  .attr("class", "cell-label")
+  .attr("x", d => d.centroid[0])
+  .attr("y", d => d.centroid[1])
+  .attr("font-size", d => d.labelFontSize)
+  .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
+  .text(d => d.name);
+
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
+function textColorFor(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.6 ? "#111111" : "#FAFAFA";
+}
+
+function fmtValue(v) {
+  return (Math.round(v * 1000) / 1000).toString();
+}
+
+cellSel
+  .on("mouseenter", function (event, d) {
+    cellSel.classed("dimmed", o => o.parentId !== d.parentId);
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
+
+    tooltip.html(
+      '<div class="tt-path">' + d.breadcrumb + '</div>' +
+      '<div class="tt-name">' + d.name + '</div>' +
+      '<div>' + fmtValue(d.value) + ' per $100 revenue</div>' +
+      '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
+    ).style("opacity", 1);
+  })
+  .on("mousemove", function (event) {
+    tooltip
+      .style("left", (event.clientX + 16) + "px")
+      .style("top", (event.clientY + 16) + "px");
+  })
+  .on("mouseleave", function () {
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
+    tooltip.style("opacity", 0);
+  });
+</script>
+</body>
+</html>

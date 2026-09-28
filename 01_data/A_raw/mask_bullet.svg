@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150">
+  <path id="bullet" fill="none" stroke="black"
+    d="M 20,40
+       L 200,40
+       C 240,40 260,50 280,75
+       C 260,100 240,110 200,110
+       L 20,110
+       Z" />
+</svg>
