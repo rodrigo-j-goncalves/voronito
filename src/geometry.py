@@ -36,6 +36,24 @@ def merge_tree_and_geometry(tree_root: dict, engine_nodes: list[dict]) -> dict[s
     return lookup
 
 
+def bounding_box(polygon: list[list[float]], padding_ratio: float = 0.05) -> tuple[float, float, float, float]:
+    """Returns (min_x, min_y, width, height) for a polygon, expanded by
+    `padding_ratio` of its own size on each side. Used to size the exported
+    SVG/HTML viewBox to the actual shape instead of the nominal canvas, so a
+    shape that doesn't fill the full canvas (e.g. a golden-ratio rectangle
+    on a square canvas) doesn't leave a visibly empty margin.
+    """
+    xs = [p[0] for p in polygon]
+    ys = [p[1] for p in polygon]
+    min_x, max_x = min(xs), max(xs)
+    min_y, max_y = min(ys), max(ys)
+    w = max_x - min_x
+    h = max_y - min_y
+    pad_x = w * padding_ratio
+    pad_y = h * padding_ratio
+    return (min_x - pad_x, min_y - pad_y, w + 2 * pad_x, h + 2 * pad_y)
+
+
 def ancestors_of(lookup: dict[str, dict], node_id: str) -> list[str]:
     """Root-first list of ancestor ids, including node_id itself."""
     chain = []

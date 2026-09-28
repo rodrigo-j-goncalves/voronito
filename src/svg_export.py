@@ -62,7 +62,17 @@ def _render_leaf(n: dict, indent: str, unit: str, clip_defs: list[str]) -> str:
     return "\n".join(parts)
 
 
-def render_svg(tree_root: dict, engine_nodes: list[dict], width: float, height: float, unit: str = "") -> str:
+def render_svg(
+    tree_root: dict,
+    engine_nodes: list[dict],
+    viewbox: tuple[float, float, float, float],
+    unit: str = "",
+) -> str:
+    """`viewbox` is (min_x, min_y, width, height), typically from
+    geometry.bounding_box() around the root shape -- not the nominal canvas
+    size, so the output frame hugs the actual shape rather than leaving
+    empty margin for shapes that don't fill a square canvas (e.g. rectangle).
+    """
     lookup = merge_tree_and_geometry(tree_root, engine_nodes)
     root_id = tree_root["id"]
 
@@ -70,8 +80,9 @@ def render_svg(tree_root: dict, engine_nodes: list[dict], width: float, height: 
     body = _render_node(root_id, lookup, indent="      ", unit=unit, clip_defs=clip_defs)
     clip_defs_str = "\n".join(clip_defs)
 
+    min_x, min_y, width, height = viewbox
     svg = f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width:g} {height:g}" width="{width:g}" height="{height:g}">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="{min_x:g} {min_y:g} {width:g} {height:g}" width="{width:g}" height="{height:g}">
   <defs>
     <style>
       .cell {{ stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }}

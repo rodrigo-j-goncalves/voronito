@@ -106,7 +106,7 @@ _TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
 <div id="chart-container">
-  <svg viewBox="0 0 {width:g} {height:g}">
+  <svg viewBox="{min_x:g} {min_y:g} {width:g} {height:g}">
     <defs></defs>
     <g id="voronoi-treemap"></g>
   </svg>
@@ -196,17 +196,21 @@ cellSel
 def render_html(
     tree_root: dict,
     engine_nodes: list[dict],
-    width: float,
-    height: float,
+    viewbox: tuple[float, float, float, float],
     title: str = "Voronoi Treemap",
     unit: str = "",
 ) -> str:
+    """`viewbox` is (min_x, min_y, width, height); see render_svg's docstring
+    in svg_export.py for why this isn't just the nominal canvas size."""
     lookup = merge_tree_and_geometry(tree_root, engine_nodes)
     cells = _leaf_records(tree_root, lookup)
+    min_x, min_y, width, height = viewbox
 
     return _TEMPLATE.format(
         title=title,
         d3_cdn=_D3_CDN,
+        min_x=min_x,
+        min_y=min_y,
         width=width,
         height=height,
         cells_json=json.dumps(cells),

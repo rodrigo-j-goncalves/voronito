@@ -81,9 +81,30 @@ function buildCircleClip(width, height, opts) {
   return points;
 }
 
+const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // ~1.618
+
 function buildRectangleClip(width, height, opts) {
-  const w = opts.width != null ? opts.width : width;
-  const h = opts.height != null ? opts.height : height;
+  let w = opts.width;
+  let h = opts.height;
+  if (w == null && h == null) {
+    // No explicit size (plain "rectangle"): use a golden-ratio rectangle
+    // inscribed in the canvas, independent of the canvas's own aspect
+    // ratio -- otherwise a square canvas would make "rectangle" degenerate
+    // into a square, indistinguishable from shape "square".
+    const margin = 0.95;
+    const availW = width * margin;
+    const availH = height * margin;
+    if (availW / availH > GOLDEN_RATIO) {
+      h = availH;
+      w = h * GOLDEN_RATIO;
+    } else {
+      w = availW;
+      h = w / GOLDEN_RATIO;
+    }
+  } else {
+    w = w != null ? w : width;
+    h = h != null ? h : height;
+  }
   const x0 = opts.x != null ? opts.x : (width - w) / 2;
   const y0 = opts.y != null ? opts.y : (height - h) / 2;
   return [

@@ -27,6 +27,7 @@ from engine import run_engine
 from svg_export import render_svg
 from html_export import render_html
 from clip_svg import extract_polygon
+from geometry import bounding_box
 
 _NAMED_REGULAR_POLYGONS = {"triangle": 3, "pentagon": 5, "hexagon": 6}
 _ALL_SHAPES = ("circle", "rectangle", "square", "ellipse", *_NAMED_REGULAR_POLYGONS)
@@ -76,15 +77,18 @@ def _generate(root, shape_value, width, height, seed, output_svg, output_html, t
     shape = _build_shape(shape_value, width, height)
     result = run_engine(root, shape=shape, options={"width": width, "height": height, "seed": seed})
 
+    root_node = next(n for n in result["nodes"] if n["id"] == root["id"])
+    viewbox = bounding_box(root_node["polygon"])
+
     if output_svg:
-        svg = render_svg(root, result["nodes"], width, height, unit=unit)
+        svg = render_svg(root, result["nodes"], viewbox, unit=unit)
         out_path = Path(output_svg)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(svg, encoding="utf-8")
         print(f"Wrote {out_path} ({len(result['nodes'])} nodes)")
 
     if output_html:
-        html = render_html(root, result["nodes"], width, height, title=title, unit=unit)
+        html = render_html(root, result["nodes"], viewbox, title=title, unit=unit)
         out_path = Path(output_html)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(html, encoding="utf-8")
