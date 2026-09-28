@@ -10,7 +10,7 @@ Example:
 
   # or an arbitrary clip polygon extracted from a closed SVG silhouette:
   python voronoi_treemap.py --input 01_data/A_raw/biomass.csv --output-svg 03_output/scratch/biomass.svg \\
-    --shape 01_data/A_raw/mask1.svg
+    --shape 01_data/A_raw/mask_leaf.svg#leaf
 
   # or generate every built-in shape in one go (biomass_circle.svg, _rectangle.svg, ...):
   python voronoi_treemap.py --input 01_data/A_raw/biomass.csv --output-svg 03_output/scratch/biomass.svg --all-shapes
