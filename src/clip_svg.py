@@ -1,18 +1,25 @@
 """Extracts a clip polygon from an SVG file's <path>/<polygon>/<polyline>
-element, for use as an arbitrary bounding shape (--clip-svg).
+element, for use as an arbitrary bounding shape (`--shape path/to/mask.svg`).
 
 Path parsing supports M/L/H/V/C/S/Q/T/A/Z (both absolute and relative);
 curves and arcs are flattened into line segments. Element + ancestor
 `transform` attributes (translate/scale/rotate/matrix) are applied. If a
 path has multiple subpaths, the one with the largest area is used as the
-silhouette. The resulting polygon is rescaled (aspect-preserving) to fit
-the target canvas with a small margin.
+silhouette -- and it must be closed (explicit Z), or extract_polygon raises
+ValueError; a <polyline> is always rejected as open by definition. The
+resulting polygon is rescaled (aspect-preserving) to fit the target canvas
+with a small margin.
+
+The underlying voronoi-treemap engine only supports convex clip polygons;
+a concave shape is not rejected, but prints a warning to stderr, since its
+concave regions (notches, waists) will be ignored/distorted by the engine.
 """
 
 from __future__ import annotations
 
 import math
 import re
+import sys
 import xml.etree.ElementTree as ET
 
 _SVG_NS = "{http://www.w3.org/2000/svg}"
@@ -150,16 +157,22 @@ def _arc_points(p0, rx, ry, x_axis_rot_deg, large_arc, sweep, p1, steps=_ARC_STE
 
 
 # ---------- path `d` parsing ----------
-def parse_path_d(d: str) -> list[list[tuple[float, float]]]:
-    """Returns a list of subpaths, each a list of (x, y) points."""
+def parse_path_d(d: str) -> list[tuple[list[tuple[float, float]], bool]]:
+    """Returns a list of (subpath points, is_closed) pairs.
+
+    A subpath counts as closed only if it ends with an explicit Z/z
+    command -- matching SVG semantics, where an omitted Z leaves the
+    path open even if it geometrically ends back at its start point.
+    """
     tokens = _TOKEN_RE.findall(d)
     i = 0
     cmd = None
     cur = (0.0, 0.0)
     start = (0.0, 0.0)
     prev_ctrl = None  # for S/T reflection
-    subpaths: list[list[tuple[float, float]]] = []
+    subpaths: list[tuple[list[tuple[float, float]], bool]] = []
     cur_sub: list[tuple[float, float]] = []
+    cur_closed = False
 
     def next_num():
         nonlocal i
@@ -182,8 +195,9 @@ def parse_path_d(d: str) -> list[list[tuple[float, float]]]:
             if is_rel:
                 x, y = cur[0] + x, cur[1] + y
             if cur_sub:
-                subpaths.append(cur_sub)
+                subpaths.append((cur_sub, cur_closed))
             cur_sub = [(x, y)]
+            cur_closed = False
             cur = start = (x, y)
             cmd = "l" if is_rel else "L"  # subsequent coord pairs are implicit lineto
         elif c == "L":
@@ -253,6 +267,7 @@ def parse_path_d(d: str) -> list[list[tuple[float, float]]]:
         elif c == "Z":
             cur_sub.append(start)
             cur = start
+            cur_closed = True
         else:
             raise ValueError(f"Unsupported SVG path command: {cmd}")
 
@@ -260,7 +275,7 @@ def parse_path_d(d: str) -> list[list[tuple[float, float]]]:
             prev_ctrl = None
 
     if cur_sub:
-        subpaths.append(cur_sub)
+        subpaths.append((cur_sub, cur_closed))
     return subpaths
 
 
@@ -307,6 +322,23 @@ def _points_attr(points_str: str) -> list[tuple[float, float]]:
     return [(nums[i], nums[i + 1]) for i in range(0, len(nums) - 1, 2)]
 
 
+def _is_convex(points: list[tuple[float, float]]) -> bool:
+    n = len(points)
+    if n < 4:
+        return True
+    signs = set()
+    for i in range(n):
+        ox, oy = points[i]
+        ax, ay = points[(i + 1) % n]
+        bx, by = points[(i + 2) % n]
+        cross = (ax - ox) * (by - ay) - (ay - oy) * (bx - ax)
+        if cross > 0:
+            signs.add(1)
+        elif cross < 0:
+            signs.add(-1)
+    return len(signs) <= 1
+
+
 def _rescale_to_canvas(points, width, height, padding_ratio=0.05):
     xs = [p[0] for p in points]
     ys = [p[1] for p in points]
@@ -332,7 +364,12 @@ def _rescale_to_canvas(points, width, height, padding_ratio=0.05):
 
 def extract_polygon(svg_path: str, width: float, height: float) -> list[list[float]]:
     """Parses `path[#fragment_id]`, extracts the target shape, and returns a
-    polygon (list of [x, y]) rescaled to fit the given canvas."""
+    polygon (list of [x, y]) rescaled to fit the given canvas.
+
+    Raises ValueError if the selected shape is not closed: a <path> whose
+    largest subpath lacks an explicit Z, or a <polyline> (which is open by
+    definition). <polygon> elements are always closed.
+    """
     path_part, _, fragment_id = svg_path.partition("#")
     tree = ET.parse(path_part)
     root = tree.getroot()
@@ -345,11 +382,33 @@ def extract_polygon(svg_path: str, width: float, height: float) -> list[list[flo
         subpaths = parse_path_d(el.get("d", ""))
         if not subpaths:
             raise ValueError(f"Path element has no drawable geometry: {svg_path}")
-        polygon = max(subpaths, key=_polygon_area)
-    else:
+        points, closed = max(subpaths, key=lambda sp: _polygon_area(sp[0]))
+        if not closed:
+            raise ValueError(
+                f"Shape in {svg_path!r} is not closed (missing 'Z' in its <path> d attribute) "
+                "-- a clip shape must be a closed outline."
+            )
+        polygon = points
+    elif tag == "polygon":
         polygon = _points_attr(el.get("points", ""))
         if len(polygon) < 3:
-            raise ValueError(f"{tag} element has fewer than 3 points: {svg_path}")
+            raise ValueError(f"polygon element has fewer than 3 points: {svg_path}")
+    elif tag == "polyline":
+        raise ValueError(
+            f"Shape in {svg_path!r} is a <polyline>, which is open by definition "
+            "-- use a <polygon> or a closed <path> (ending in 'Z') instead."
+        )
+    else:
+        raise ValueError(f"Unsupported SVG element <{tag}>: {svg_path}")
 
     transformed = [_apply(transform, x, y) for x, y in polygon]
+
+    if not _is_convex(transformed):
+        print(
+            f"warning: shape in {svg_path!r} is concave -- the underlying voronoi-treemap "
+            "engine only supports convex clip polygons, so concave regions (notches, waists) "
+            "will be ignored/distorted in the output.",
+            file=sys.stderr,
+        )
+
     return _rescale_to_canvas(transformed, width, height)

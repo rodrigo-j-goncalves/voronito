@@ -34,8 +34,7 @@ python3 -m venv .venv
 | `--input` | *(required)* | Path to the input CSV |
 | `--output-svg` | | Path to write the static SVG (at least one of `--output-svg`/`--output-html` is required) |
 | `--output-html` | | Path to write the interactive HTML |
-| `--shape` | `circle` | Bounding shape: `circle` or `rectangle` |
-| `--clip-svg` | | `path/to/mask.svg[#elementId]` — use an arbitrary polygon extracted from an SVG `<path>`/`<polygon>`/`<polyline>` instead of `--shape` |
+| `--shape` | `circle` | `circle`, `rectangle`, or a path to an `.svg` file (optionally `path.svg#elementId`) to clip to an arbitrary polygon extracted from its `<path>`/`<polygon>`/`<polyline>` — the shape must be closed (a `<path>` needs an explicit `Z`; `<polyline>` is rejected as open by definition). The engine only supports **convex** clip polygons; a concave mask prints a warning and proceeds, but its concave regions (notches, waists) will be ignored/distorted in the output. |
 | `--width`, `--height` | `800`, `800` | Canvas size in px |
 | `--seed` | `42` | PRNG seed for the layout (deterministic output) |
 | `--title` | `Voronoi Treemap` | `<title>` for the HTML output |

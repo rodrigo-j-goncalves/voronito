@@ -8,9 +8,9 @@ Example:
     --output-html output/biomass.html \\
     --shape circle
 
-  # or an arbitrary clip polygon extracted from an SVG silhouette:
+  # or an arbitrary clip polygon extracted from a closed SVG silhouette:
   python voronoi_treemap.py --input data/biomass.csv --output-svg output/biomass.svg \\
-    --clip-svg masks/leaf.svg#outline
+    --shape masks/leaf.svg#outline
 """
 
 from __future__ import annotations
@@ -26,10 +26,22 @@ from html_export import render_html
 from clip_svg import extract_polygon
 
 
+_BUILTIN_SHAPES = ("circle", "rectangle")
+
+
+def _is_svg_shape(value: str) -> bool:
+    return value.split("#", 1)[0].lower().endswith(".svg")
+
+
 def _build_shape(args) -> dict:
-    if args.clip_svg:
-        points = extract_polygon(args.clip_svg, args.width, args.height)
+    if _is_svg_shape(args.shape):
+        points = extract_polygon(args.shape, args.width, args.height)
         return {"type": "polygon", "points": points}
+    if args.shape not in _BUILTIN_SHAPES:
+        raise SystemExit(
+            f"--shape must be 'circle', 'rectangle', or a path to an .svg file "
+            f"(got: {args.shape!r})"
+        )
     return {"type": args.shape}
 
 
@@ -39,12 +51,13 @@ def main() -> None:
     parser.add_argument("--output-svg", help="Path to write the SVG output")
     parser.add_argument("--output-html", help="Path to write the interactive HTML output")
 
-    shape_group = parser.add_mutually_exclusive_group()
-    shape_group.add_argument("--shape", choices=["circle", "rectangle"], default="circle")
-    shape_group.add_argument(
-        "--clip-svg",
-        metavar="PATH[#elementId]",
-        help="Use an arbitrary polygon clip extracted from an SVG path/polygon/polyline element",
+    parser.add_argument(
+        "--shape",
+        default="circle",
+        help=(
+            "Bounding shape: 'circle', 'rectangle', or a path to an .svg file "
+            "(optionally 'path.svg#elementId') to clip to an arbitrary closed polygon"
+        ),
     )
 
     parser.add_argument("--width", type=float, default=800)
