@@ -11,10 +11,9 @@ Quarto via `<iframe>`).
 Follows the [project-template](https://github.com/rodrigo-j-goncalves/project-template) convention:
 
 ```
-01_data/A_raw/       input CSVs and SVG masks -- never modified by scripts
-02_code/A_analysis/  all source (Python + JS)
-03_output/A_figures/ committed, pre-generated example outputs
-03_output/scratch/   gitignored scratch area for your own runs
+01_data/    input CSVs and SVG masks -- never modified by scripts
+02_code/    all source (Python + JS)
+03_output/  generated outputs (committed example figures + your own runs)
 ```
 
 `package.json`, `requirements.txt`, and this README stay at the repo root
@@ -33,10 +32,10 @@ python3 -m venv .venv
 ## Usage
 
 ```bash
-.venv/bin/python 02_code/A_analysis/voronoi_treemap.py \
-  --input 01_data/A_raw/biomass.csv \
-  --output-svg 03_output/scratch/biomass.svg \
-  --output-html 03_output/scratch/biomass.html \
+.venv/bin/python 02_code/voronoi_treemap.py \
+  --input 01_data/biomass.csv \
+  --output-svg 03_output/biomass.svg \
+  --output-html 03_output/biomass.html \
   --shape circle \
   --unit "Gt C"
 ```
@@ -74,27 +73,28 @@ Root,,Root Category,,,
 
 ## Demo datasets
 
-- `01_data/A_raw/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
-- `01_data/A_raw/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
-- `01_data/A_raw/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
-- `01_data/A_raw/mask_teardrop.svg`, `mask_leaf.svg`, `mask_bullet.svg` — convex real-object silhouettes (a raindrop, a simple leaf with no stem notch, a bullet pointing right), for `--shape mask_<name>.svg#<id>`.
+- `01_data/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
+- `01_data/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
+- `01_data/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
+- `01_data/mask_teardrop.svg`, `mask_leaf.svg`, `mask_bullet.svg` — convex real-object silhouettes (a raindrop, a simple leaf with no stem notch, a bullet pointing right), for `--shape mask_<name>.svg#<id>`.
 
-`03_output/A_figures/` holds pre-generated outputs for all three CSV datasets,
-in every built-in shape (`--all-shapes`) as both SVG and HTML — e.g.
-`03_output/A_figures/companies_hexagon.svg`. Unlike `03_output/scratch/` (a
-gitignored area for your own runs), `A_figures/` is committed, so these are
-viewable without regenerating them. Regenerate with, e.g.:
+`03_output/` holds pre-generated, committed outputs for all three CSV
+datasets, in every built-in shape (`--all-shapes`) as both SVG and HTML —
+e.g. `03_output/companies_hexagon.svg` — viewable without regenerating
+them. It's also where your own ad-hoc runs go; nothing there is gitignored,
+so check `git status` before committing if you've been experimenting.
+Regenerate the committed set with, e.g.:
 
 ```bash
-.venv/bin/python 02_code/A_analysis/voronoi_treemap.py --input 01_data/A_raw/companies.csv \
-  --output-svg 03_output/A_figures/companies.svg --output-html 03_output/A_figures/companies.html \
+.venv/bin/python 02_code/voronoi_treemap.py --input 01_data/companies.csv \
+  --output-svg 03_output/companies.svg --output-html 03_output/companies.html \
   --all-shapes --unit "per \$100 revenue" --title "World's 30 Largest Companies"
 ```
 
 ## Architecture
 
 ```
-02_code/A_analysis/
+02_code/
   voronoi_treemap.py   CLI entry point
   hierarchy.py          CSV -> nested tree, id resolution
   colors.py              Okabe-Ito palette + shade assignment
