@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 
-from geometry import merge_tree_and_geometry, ancestors_of
+from geometry import merge_tree_and_geometry, ancestors_of, label_layout
 
 _D3_CDN = "https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"
 
@@ -31,6 +31,7 @@ def _leaf_records(tree_root: dict, lookup: dict[str, dict]) -> list[dict]:
             continue
         parent_id = n["parent_id"]
         parent_value = lookup[parent_id]["value"] if parent_id else n["value"]
+        layout = label_layout(n["polygon"], n["centroid"], n["area"], n["name"])
         records.append(
             {
                 "id": n["id"],
@@ -45,6 +46,7 @@ def _leaf_records(tree_root: dict, lookup: dict[str, dict]) -> list[dict]:
                 "breadcrumb": _breadcrumb(lookup, node_id),
                 "pctParent": (n["value"] / parent_value * 100) if parent_value else 100.0,
                 "pctTotal": (n["value"] / root_value * 100) if root_value else 100.0,
+                "labelFontSize": layout["font_size"] if layout else None,
             }
         )
     return records
@@ -97,6 +99,7 @@ _TEMPLATE = """<!DOCTYPE html>
 <body>
 <div id="chart-container">
   <svg viewBox="0 0 {width:g} {height:g}">
+    <defs></defs>
     <g id="voronoi-treemap"></g>
   </svg>
 </div>
@@ -116,15 +119,26 @@ const cellSel = svg.selectAll("path.cell")
   .attr("d", d => d.d)
   .attr("fill", d => d.color);
 
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
 svg.selectAll("text.cell-label")
-  .data(CELLS.filter(d => d.area >= {min_label_area}))
+  .data(labeled)
   .enter()
   .append("text")
   .attr("class", "cell-label")
   .attr("x", d => d.centroid[0])
   .attr("y", d => d.centroid[1])
-  .attr("font-size", d => Math.max({font_min}, Math.min({font_max}, {font_k} * Math.sqrt(d.area))))
+  .attr("font-size", d => d.labelFontSize)
   .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
   .text(d => d.name);
 
 function textColorFor(hex) {{
@@ -148,7 +162,7 @@ cellSel
     tooltip.html(
       '<div class="tt-path">' + d.breadcrumb + '</div>' +
       '<div class="tt-name">' + d.name + '</div>' +
-      '<div>' + fmtValue(d.value) + ' Gt C</div>' +
+      '<div>' + fmtValue(d.value) + ' {unit}</div>' +
       '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
     ).style("opacity", 1);
   }})
@@ -167,7 +181,14 @@ cellSel
 """
 
 
-def render_html(tree_root: dict, engine_nodes: list[dict], width: float, height: float, title: str = "Voronoi Treemap") -> str:
+def render_html(
+    tree_root: dict,
+    engine_nodes: list[dict],
+    width: float,
+    height: float,
+    title: str = "Voronoi Treemap",
+    unit: str = "",
+) -> str:
     lookup = merge_tree_and_geometry(tree_root, engine_nodes)
     cells = _leaf_records(tree_root, lookup)
 
@@ -177,8 +198,5 @@ def render_html(tree_root: dict, engine_nodes: list[dict], width: float, height:
         width=width,
         height=height,
         cells_json=json.dumps(cells),
-        min_label_area=200.0,
-        font_k=0.35,
-        font_min=7.0,
-        font_max=20.0,
+        unit=unit,
     )

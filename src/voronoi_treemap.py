@@ -51,6 +51,7 @@ def main() -> None:
     parser.add_argument("--height", type=float, default=800)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--title", default="Voronoi Treemap", help="Title for the HTML output")
+    parser.add_argument("--unit", default="", help="Unit label appended to values in tooltips (e.g. 'Gt C', 'USD')")
     args = parser.parse_args()
 
     if not args.output_svg and not args.output_html:
@@ -68,14 +69,14 @@ def main() -> None:
     )
 
     if args.output_svg:
-        svg = render_svg(root, result["nodes"], args.width, args.height)
+        svg = render_svg(root, result["nodes"], args.width, args.height, unit=args.unit)
         out_path = Path(args.output_svg)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(svg, encoding="utf-8")
         print(f"Wrote {out_path} ({len(result['nodes'])} nodes)")
 
     if args.output_html:
-        html = render_html(root, result["nodes"], args.width, args.height, title=args.title)
+        html = render_html(root, result["nodes"], args.width, args.height, title=args.title, unit=args.unit)
         out_path = Path(args.output_html)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(html, encoding="utf-8")

@@ -1,0 +1,40 @@
+id,parent_id,name,value,color,description
+Companies,,World's 30 Largest Companies,,,"Reproduction of Visual Capitalist's ""World's 30 Largest Companies: Profit per $100 in Revenue"" (source: Fortune Global 500, 2026 fiscal data, via visualcapitalist.com). Wedge size = profit per $100 in revenue (2026), the figure displayed on each cell. Each leaf's description carries the underlying annual profit for reference."
+Energy,Companies,Energy,,#F5A623,
+Finance,Companies,Finance,,#1B6B45,
+Auto,Companies,Auto,,#C0504D,
+Tech,Companies,Tech,,#17C3A2,
+Health,Companies,Health,,#E8C547,
+Retail,Companies,Retail,,#8E6BAE,
+Utilities,Companies,Utilities,,#A9B23B,
+RealEstate,Companies,Real Estate,,#9B9B9B,
+,Tech,Nvidia,55.60,,USA. $120B annual profit.
+,Tech,Microsoft,36.10,,USA. $102B annual profit.
+,Tech,Alphabet,32.80,,USA. $132B annual profit.
+,Tech,Meta,30.10,,USA. $60B annual profit.
+,Tech,Apple,26.90,,USA. $112B annual profit.
+,Tech,Samsung,13.30,,South Korea. $31B annual profit.
+,Tech,Amazon,10.80,,USA. $78B annual profit.
+,Tech,Foxconn,2.30,,Taiwan. $6B annual profit.
+,Finance,ICBC,24.30,,China. $51B annual profit.
+,Finance,JPMorganChase,20.30,,USA. $57B annual profit.
+,Finance,Berkshire Hathaway,18.00,,USA. $67B annual profit.
+,Energy,Saudi Aramco,20.80,,Saudi Arabia. $93B annual profit.
+,Energy,ExxonMobil,8.70,,USA. $29B annual profit.
+,Energy,Shell,6.50,,Netherlands. $18B annual profit.
+,Energy,CNPC,5.30,,China. $21B annual profit.
+,Energy,Sinopec Group,1.40,,China. $5B annual profit.
+,Energy,Trafigura Group,1.10,,Switzerland. $3B annual profit.
+,Energy,Glencore,0.10,,Switzerland. $0.4B annual profit.
+,Auto,Toyota,7.60,,Japan. $26B annual profit.
+,Auto,Volkswagen,2.30,,Germany. $8B annual profit.
+,Retail,Walmart,3.10,,USA. $22B annual profit.
+,Retail,Costco Wholesale,2.90,,USA. $8B annual profit.
+,Retail,Cencora,0.50,,USA. $2B annual profit.
+,Health,UnitedHealth Group,2.70,,USA. $12B annual profit.
+,Health,Cigna Group,2.20,,USA. $6B annual profit.
+,Health,McKesson,1.20,,USA. $5B annual profit.
+,Health,Cardinal Health,0.70,,USA. $2B annual profit.
+,Health,CVS Health,0.40,,USA. $2B annual profit.
+,Utilities,State Grid,2.00,,China. $11B annual profit.
+,RealEstate,China State Construction,1.10,,China. $3B annual profit.
