@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      .cell { stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }
+      .cell-label { font-family: "Helvetica Neue", Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <clipPath id="clip-Plants"><path d="M400.00,20.00 L199.41,367.43 L300.63,538.74 L392.08,590.00 L609.26,590.00 L657.30,538.05 L680.45,505.76 Z"/></clipPath>
+    <clipPath id="clip-Bacteria"><path d="M271.69,590.00 L300.63,538.74 L199.41,367.43 L109.84,522.58 L133.78,565.73 L157.36,590.00 Z"/></clipPath>
+    <clipPath id="clip-Fungi"><path d="M392.08,590.00 L300.63,538.74 L271.69,590.00 Z"/></clipPath>
+    <clipPath id="clip-Fish"><path d="M74.53,583.73 L77.79,590.00 L104.49,590.00 L106.48,587.10 L109.52,577.73 L95.93,563.97 L86.19,563.54 Z"/></clipPath>
+  </defs>
+  <g id="voronoi-treemap">
+      <g id="group-LivingEarth">
+        <path id="cell-Plants" class="cell" d="M400.00,20.00 L199.41,367.43 L300.63,538.74 L392.08,590.00 L609.26,590.00 L657.30,538.05 L680.45,505.76 Z" fill="#009E73">
+          <title>Plants: 450 Gt C</title>
+        </path>
+        <text class="cell-label" x="429.78" y="371.00" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Plants)">Plants</text>
+        <path id="cell-Bacteria" class="cell" d="M271.69,590.00 L300.63,538.74 L199.41,367.43 L109.84,522.58 L133.78,565.73 L157.36,590.00 Z" fill="#0072B2">
+          <title>Bacteria: 70 Gt C</title>
+        </path>
+        <text class="cell-label" x="203.98" y="506.59" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Bacteria)">Bacteria</text>
+        <path id="cell-Fungi" class="cell" d="M392.08,590.00 L300.63,538.74 L271.69,590.00 Z" fill="#CC79A7">
+          <title>Fungi: 12 Gt C</title>
+        </path>
+        <text class="cell-label" x="321.47" y="572.91" font-size="19.4" fill="#FAFAFA" clip-path="url(#clip-Fungi)">Fungi</text>
+        <path id="cell-Archaea" class="cell" d="M677.89,590.00 L729.09,590.00 L680.45,505.76 L657.30,538.05 Z" fill="#E69F00">
+          <title>Archaea: 7 Gt C</title>
+        </path>
+        <path id="cell-Protists" class="cell" d="M157.36,590.00 L133.78,565.73 L125.33,590.00 Z" fill="#56B4E9">
+          <title>Protists: 4 Gt C</title>
+        </path>
+        <g id="group-Animals">
+          <path id="cell-Arthropods" class="cell" d="M121.40,575.05 L132.05,562.61 L120.75,542.24 L114.32,540.62 L97.79,543.44 L97.23,544.42 L95.93,563.97 L109.52,577.73 L111.83,577.92 Z" fill="#833A00">
+            <title>Arthropods: 1 Gt C</title>
+          </path>
+          <path id="cell-Fish" class="cell" d="M74.53,583.73 L77.79,590.00 L104.49,590.00 L106.48,587.10 L109.52,577.73 L95.93,563.97 L86.19,563.54 Z" fill="#964200">
+            <title>Fish: 0.7 Gt C</title>
+          </path>
+          <text class="cell-label" x="92.14" y="578.68" font-size="9.1" fill="#FAFAFA" clip-path="url(#clip-Fish)">Fish</text>
+          <path id="cell-Mollusks" class="cell" d="M125.33,590.00 L128.60,580.60 L121.40,575.05 L111.83,577.92 L113.84,590.00 Z" fill="#A84A00">
+            <title>Mollusks: 0.2 Gt C</title>
+          </path>
+          <path id="cell-Annelids" class="cell" d="M97.79,543.44 L114.32,540.62 L116.92,535.34 L109.84,522.58 Z" fill="#BA5200">
+            <title>Annelids: 0.2 Gt C</title>
+          </path>
+          <path id="cell-Cnidarians" class="cell" d="M133.78,565.73 L132.05,562.61 L121.40,575.05 L128.60,580.60 Z" fill="#CC5A00">
+            <title>Cnidarians: 0.1 Gt C</title>
+          </path>
+          <path id="cell-Livestock" class="cell" d="M86.19,563.54 L95.93,563.97 L97.23,544.42 Z" fill="#DE6200">
+            <title>Livestock: 0.1 Gt C</title>
+          </path>
+          <path id="cell-Humans" class="cell" d="M113.84,590.00 L111.83,577.92 L109.52,577.73 L106.48,587.10 L110.53,590.00 Z" fill="#F06A00">
+            <title>Humans: 0.06 Gt C</title>
+          </path>
+          <path id="cell-Nematodes" class="cell" d="M116.92,535.34 L114.32,540.62 L120.75,542.24 Z" fill="#FF7203">
+            <title>Nematodes: 0.02 Gt C</title>
+          </path>
+          <path id="cell-Wildmammals" class="cell" d="M104.49,590.00 L110.53,590.00 L106.48,587.10 Z" fill="#FF7D15">
+            <title>Wild mammals: 0.007 Gt C</title>
+          </path>
+          <path id="cell-Wildbirds" class="cell" d="M77.79,590.00 L74.53,583.73 L70.91,590.00 Z" fill="#FF8728">
+            <title>Wild birds: 0.002 Gt C</title>
+          </path>
+        </g>
+        <path id="cell-Viruses" class="cell" d="M677.89,590.00 L657.30,538.05 L609.26,590.00 Z" fill="#F0E442">
+          <title>Viruses: 0.2 Gt C</title>
+        </path>
+      </g>
+  </g>
+</svg>

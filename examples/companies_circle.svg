@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      .cell { stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }
+      .cell-label { font-family: "Helvetica Neue", Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <clipPath id="clip-SaudiAramco"><path d="M641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L519.56,39.67 L471.48,113.29 L475.44,225.26 L504.08,248.89 L572.59,253.14 L585.59,248.14 L654.97,118.85 Z"/></clipPath>
+    <clipPath id="clip-ExxonMobil"><path d="M437.25,21.83 L402.26,20.11 L366.70,73.39 L349.52,117.03 L471.48,113.29 L519.56,39.67 L510.31,36.36 L474.13,27.30 Z"/></clipPath>
+    <clipPath id="clip-Shell"><path d="M693.74,158.93 L668.70,131.30 L654.97,118.85 L585.59,248.14 L632.92,279.67 L637.31,278.13 L699.56,166.78 Z"/></clipPath>
+    <clipPath id="clip-CNPC"><path d="M348.23,120.32 L475.44,225.26 L471.48,113.29 L349.52,117.03 Z"/></clipPath>
+    <clipPath id="clip-ICBC"><path d="M611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L740.59,567.59 L632.20,505.74 L542.15,507.58 L520.21,677.01 L597.20,724.30 Z"/></clipPath>
+    <clipPath id="clip-Toyota"><path d="M302.35,123.30 L275.21,41.54 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L110.10,154.69 Z"/></clipPath>
+    <clipPath id="clip-Nvidia"><path d="M131.95,401.68 L25.81,464.08 L27.30,474.13 L36.36,510.31 L48.93,545.42 L64.87,579.13 L84.04,611.12 L106.26,641.07 L131.30,668.70 L158.93,693.74 L188.88,715.96 L220.87,735.13 L254.58,751.07 L274.21,758.10 L378.07,504.89 Z"/></clipPath>
+    <clipPath id="clip-Microsoft"><path d="M348.23,120.32 L332.26,118.41 L179.05,143.43 L176.30,271.35 L400.25,342.03 L502.21,247.35 Z"/></clipPath>
+    <clipPath id="clip-Alphabet"><path d="M289.69,763.64 L325.87,772.70 L362.75,778.17 L370.59,778.56 L520.21,677.01 L531.67,588.53 L461.04,520.34 L389.68,499.11 L378.07,504.89 L274.21,758.10 Z"/></clipPath>
+    <clipPath id="clip-Meta"><path d="M146.12,299.28 L131.95,401.68 L378.07,504.89 L389.68,499.11 L400.25,342.03 L176.30,271.35 Z"/></clipPath>
+    <clipPath id="clip-Apple"><path d="M461.04,520.34 L542.63,503.86 L568.74,302.23 L502.21,247.35 L400.25,342.03 L389.68,499.11 Z"/></clipPath>
+    <clipPath id="clip-Samsung"><path d="M146.12,299.28 L46.23,262.11 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L25.81,464.08 L131.95,401.68 Z"/></clipPath>
+    <clipPath id="clip-Amazon"><path d="M179.05,143.43 L110.10,154.69 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L46.23,262.11 L146.12,299.28 L176.30,271.35 Z"/></clipPath>
+    <clipPath id="clip-Walmart"><path d="M400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L510.53,763.56 L504.37,747.18 L475.74,707.20 L370.59,778.56 Z"/></clipPath>
+  </defs>
+  <g id="voronoi-treemap">
+      <g id="group-Companies">
+        <g id="group-Energy">
+          <path id="cell-SaudiAramco" class="cell" d="M641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L519.56,39.67 L471.48,113.29 L475.44,225.26 L504.08,248.89 L572.59,253.14 L585.59,248.14 L654.97,118.85 Z" fill="#833A00">
+            <title>Saudi Aramco: 20.8 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="550.29" y="151.32" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-SaudiAramco)">Saudi Aramco</text>
+          <path id="cell-ExxonMobil" class="cell" d="M437.25,21.83 L402.26,20.11 L366.70,73.39 L349.52,117.03 L471.48,113.29 L519.56,39.67 L510.31,36.36 L474.13,27.30 Z" fill="#9F4600">
+            <title>ExxonMobil: 8.7 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="432.58" y="70.38" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-ExxonMobil)">ExxonMobil</text>
+          <path id="cell-Shell" class="cell" d="M693.74,158.93 L668.70,131.30 L654.97,118.85 L585.59,248.14 L632.92,279.67 L637.31,278.13 L699.56,166.78 Z" fill="#BA5200">
+            <title>Shell: 6.5 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="643.98" y="202.48" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Shell)">Shell</text>
+          <path id="cell-CNPC" class="cell" d="M348.23,120.32 L475.44,225.26 L471.48,113.29 L349.52,117.03 Z" fill="#D55E00">
+            <title>CNPC: 5.3 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="430.54" y="151.95" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-CNPC)">CNPC</text>
+          <path id="cell-SinopecGroup" class="cell" d="M632.92,279.67 L585.59,248.14 L572.59,253.14 L568.03,278.25 L577.16,299.27 Z" fill="#F06A00">
+            <title>Sinopec Group: 1.4 per $100 revenue</title>
+          </path>
+          <path id="cell-TrafiguraGroup" class="cell" d="M556.18,291.87 L568.03,278.25 L572.59,253.14 L504.08,248.89 Z" fill="#FF770C">
+            <title>Trafigura Group: 1.1 per $100 revenue</title>
+          </path>
+          <path id="cell-Glencore" class="cell" d="M568.74,302.23 L577.16,299.27 L568.03,278.25 L556.18,291.87 Z" fill="#FF8728">
+            <title>Glencore: 0.1 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Finance">
+          <path id="cell-ICBC" class="cell" d="M611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L740.59,567.59 L632.20,505.74 L542.15,507.58 L520.21,677.01 L597.20,724.30 Z" fill="#00664A">
+            <title>ICBC: 24.3 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="614.71" y="604.72" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-ICBC)">ICBC</text>
+          <path id="cell-JPMorganChase" class="cell" d="M751.07,545.42 L763.64,510.31 L772.70,474.13 L778.17,437.25 L780.00,400.00 L778.17,362.75 L772.70,325.87 L769.30,312.28 L698.77,294.03 L632.20,505.74 L740.59,567.59 Z" fill="#009E73">
+            <title>JPMorganChase: 20.3 per $100 revenue</title>
+          </path>
+          <path id="cell-BerkshireHathaway" class="cell" d="M637.31,278.13 L568.74,302.23 L542.15,507.58 L632.20,505.74 L698.77,294.03 Z" fill="#00F0AE">
+            <title>Berkshire Hathaway: 18 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Auto">
+          <path id="cell-Toyota" class="cell" d="M302.35,123.30 L275.21,41.54 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L110.10,154.69 Z" fill="#946700">
+            <title>Toyota: 7.6 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="222.20" y="104.17" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Toyota)">Toyota</text>
+          <path id="cell-Volkswagen" class="cell" d="M311.33,30.94 L289.69,36.36 L275.21,41.54 L302.35,123.30 L332.26,118.41 Z" fill="#FFC239">
+            <title>Volkswagen: 2.3 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Tech">
+          <path id="cell-Nvidia" class="cell" d="M131.95,401.68 L25.81,464.08 L27.30,474.13 L36.36,510.31 L48.93,545.42 L64.87,579.13 L84.04,611.12 L106.26,641.07 L131.30,668.70 L158.93,693.74 L188.88,715.96 L220.87,735.13 L254.58,751.07 L274.21,758.10 L378.07,504.89 Z" fill="#1B90D2">
+            <title>Nvidia: 55.6 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="200.41" y="563.57" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Nvidia)">Nvidia</text>
+          <path id="cell-Microsoft" class="cell" d="M348.23,120.32 L332.26,118.41 L179.05,143.43 L176.30,271.35 L400.25,342.03 L502.21,247.35 Z" fill="#229DE2">
+            <title>Microsoft: 36.1 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="322.72" y="226.51" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Microsoft)">Microsoft</text>
+          <path id="cell-Alphabet" class="cell" d="M289.69,763.64 L325.87,772.70 L362.75,778.17 L370.59,778.56 L520.21,677.01 L531.67,588.53 L461.04,520.34 L389.68,499.11 L378.07,504.89 L274.21,758.10 Z" fill="#37A6E5">
+            <title>Alphabet: 32.8 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="408.09" y="644.55" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Alphabet)">Alphabet</text>
+          <path id="cell-Meta" class="cell" d="M146.12,299.28 L131.95,401.68 L378.07,504.89 L389.68,499.11 L400.25,342.03 L176.30,271.35 Z" fill="#4CAFE8">
+            <title>Meta: 30.1 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="272.70" y="382.00" font-size="20.0" fill="#111111" clip-path="url(#clip-Meta)">Meta</text>
+          <path id="cell-Apple" class="cell" d="M461.04,520.34 L542.63,503.86 L568.74,302.23 L502.21,247.35 L400.25,342.03 L389.68,499.11 Z" fill="#60B9EA">
+            <title>Apple: 26.9 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="480.03" y="395.61" font-size="20.0" fill="#111111" clip-path="url(#clip-Apple)">Apple</text>
+          <path id="cell-Samsung" class="cell" d="M146.12,299.28 L46.23,262.11 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L25.81,464.08 L131.95,401.68 Z" fill="#75C2ED">
+            <title>Samsung: 13.3 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="76.36" y="357.48" font-size="20.0" fill="#111111" clip-path="url(#clip-Samsung)">Samsung</text>
+          <path id="cell-Amazon" class="cell" d="M179.05,143.43 L110.10,154.69 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L46.23,262.11 L146.12,299.28 L176.30,271.35 Z" fill="#8ACBF0">
+            <title>Amazon: 10.8 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="125.33" y="223.05" font-size="20.0" fill="#111111" clip-path="url(#clip-Amazon)">Amazon</text>
+          <path id="cell-Foxconn" class="cell" d="M542.63,503.86 L461.04,520.34 L531.67,588.53 Z" fill="#9ED4F2">
+            <title>Foxconn: 2.3 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Health">
+          <path id="cell-UnitedHealthGroup" class="cell" d="M714.75,298.17 L724.65,272.31 L718.13,247.37 L688.04,236.14 L653.36,249.41 L637.31,278.13 Z" fill="#B04380">
+            <title>UnitedHealth Group: 2.7 per $100 revenue</title>
+          </path>
+          <path id="cell-CignaGroup" class="cell" d="M735.13,220.87 L715.96,188.88 L699.56,166.78 L674.23,212.09 L688.04,236.14 L718.13,247.37 L740.16,231.50 Z" fill="#C15B94">
+            <title>Cigna Group: 2.2 per $100 revenue</title>
+          </path>
+          <path id="cell-McKesson" class="cell" d="M769.30,312.28 L763.64,289.69 L755.03,265.63 L724.65,272.31 L714.75,298.17 Z" fill="#CC79A7">
+            <title>McKesson: 1.2 per $100 revenue</title>
+          </path>
+          <path id="cell-CardinalHealth" class="cell" d="M724.65,272.31 L755.03,265.63 L751.07,254.58 L740.16,231.50 L718.13,247.37 Z" fill="#D797BA">
+            <title>Cardinal Health: 0.7 per $100 revenue</title>
+          </path>
+          <path id="cell-CVSHealth" class="cell" d="M674.23,212.09 L653.36,249.41 L688.04,236.14 Z" fill="#E2B4CE">
+            <title>CVS Health: 0.4 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Retail">
+          <path id="cell-Walmart" class="cell" d="M400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L510.53,763.56 L504.37,747.18 L475.74,707.20 L370.59,778.56 Z" fill="#004166">
+            <title>Walmart: 3.1 per $100 revenue</title>
+          </path>
+          <text class="cell-label" x="451.83" y="752.44" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Walmart)">Walmart</text>
+          <path id="cell-CostcoWholesale" class="cell" d="M520.21,677.01 L502.86,688.79 L504.37,747.18 L510.53,763.56 L545.42,751.07 L579.13,735.13 L597.20,724.30 Z" fill="#0072B2">
+            <title>Costco Wholesale: 2.9 per $100 revenue</title>
+          </path>
+          <path id="cell-Cencora" class="cell" d="M475.74,707.20 L504.37,747.18 L502.86,688.79 Z" fill="#05A5FF">
+            <title>Cencora: 0.5 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-Utilities">
+          <path id="cell-StateGrid" class="cell" d="M402.26,20.11 L400.00,20.00 L362.75,21.83 L325.87,27.30 L315.63,29.86 L366.70,73.39 Z" fill="#F0E442">
+            <title>State Grid: 2 per $100 revenue</title>
+          </path>
+        </g>
+        <g id="group-RealEstate">
+          <path id="cell-ChinaStateConstruction" class="cell" d="M315.63,29.86 L311.33,30.94 L332.26,118.41 L348.23,120.32 L366.70,73.39 Z" fill="#9B9B9B">
+            <title>China State Construction: 1.1 per $100 revenue</title>
+          </path>
+        </g>
+      </g>
+  </g>
+</svg>

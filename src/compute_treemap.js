@@ -94,20 +94,55 @@ function buildRectangleClip(width, height, opts) {
   ];
 }
 
+function buildEllipseClip(width, height, opts) {
+  const cx = opts.cx != null ? opts.cx : width / 2;
+  const cy = opts.cy != null ? opts.cy : height / 2;
+  const rx = opts.rx != null ? opts.rx : (width / 2) * 0.95;
+  const ry = opts.ry != null ? opts.ry : (height / 2) * 0.95;
+  const vertices = opts.vertices != null ? opts.vertices : 64;
+  const points = [];
+  for (let i = 0; i < vertices; i++) {
+    const angle = (2 * Math.PI * i) / vertices;
+    points.push([cx + rx * Math.cos(angle), cy + ry * Math.sin(angle)]);
+  }
+  return points;
+}
+
+function buildRegularPolygonClip(width, height, opts, sides) {
+  if (!Number.isInteger(sides) || sides < 3) {
+    throw new Error(`shape.sides must be an integer >= 3 (got: ${sides})`);
+  }
+  const cx = opts.cx != null ? opts.cx : width / 2;
+  const cy = opts.cy != null ? opts.cy : height / 2;
+  const r = opts.r != null ? opts.r : (Math.min(width, height) / 2) * 0.95;
+  const startAngle = -Math.PI / 2; // first vertex points straight up
+  const points = [];
+  for (let i = 0; i < sides; i++) {
+    const angle = startAngle + (2 * Math.PI * i) / sides;
+    points.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+  }
+  return points;
+}
+
 function buildClipPolygon(shape, width, height) {
   const type = (shape && shape.type) || 'circle';
   switch (type) {
     case 'circle':
       return buildCircleClip(width, height, shape || {});
+    case 'ellipse':
+      return buildEllipseClip(width, height, shape || {});
     case 'rectangle':
       return buildRectangleClip(width, height, shape || {});
     case 'polygon':
+      if (shape.sides != null) {
+        return buildRegularPolygonClip(width, height, shape, shape.sides);
+      }
       if (!Array.isArray(shape.points) || shape.points.length < 3) {
-        throw new Error('shape.type "polygon" requires a "points" array with >= 3 [x, y] vertices');
+        throw new Error('shape.type "polygon" requires either "sides" (regular N-gon) or a "points" array with >= 3 [x, y] vertices');
       }
       return shape.points.map(([x, y]) => [x, y]);
     default:
-      throw new Error(`Unknown shape.type "${type}" (expected "circle", "rectangle", or "polygon")`);
+      throw new Error(`Unknown shape.type "${type}" (expected "circle", "ellipse", "rectangle", or "polygon")`);
   }
 }
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      .cell { stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }
+      .cell-label { font-family: "Helvetica Neue", Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <clipPath id="clip-Plants"><path d="M748.51,393.80 L738.92,228.89 L735.13,220.87 L715.96,188.88 L693.74,158.93 L668.70,131.30 L641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L510.31,36.36 L474.13,27.30 L437.25,21.83 L400.00,20.00 L362.75,21.83 L325.87,27.30 L289.69,36.36 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L27.18,473.30 L192.41,659.58 L273.31,699.10 L315.53,708.86 L720.41,492.39 Z"/></clipPath>
+    <clipPath id="clip-Bacteria"><path d="M362.75,778.17 L400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L545.42,751.07 L579.13,735.13 L611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L751.07,545.42 L756.80,529.42 L720.41,492.39 L315.53,708.86 L335.46,774.12 Z"/></clipPath>
+    <clipPath id="clip-Archaea"><path d="M158.93,693.74 L188.88,715.96 L220.87,735.13 L250.33,749.07 L273.31,699.10 L192.41,659.58 L158.50,693.35 Z"/></clipPath>
+  </defs>
+  <g id="voronoi-treemap">
+      <g id="group-LivingEarth">
+        <path id="cell-Plants" class="cell" d="M748.51,393.80 L738.92,228.89 L735.13,220.87 L715.96,188.88 L693.74,158.93 L668.70,131.30 L641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L510.31,36.36 L474.13,27.30 L437.25,21.83 L400.00,20.00 L362.75,21.83 L325.87,27.30 L289.69,36.36 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L27.18,473.30 L192.41,659.58 L273.31,699.10 L315.53,708.86 L720.41,492.39 Z" fill="#009E73">
+          <title>Plants: 450 Gt C</title>
+        </path>
+        <text class="cell-label" x="380.60" y="346.75" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Plants)">Plants</text>
+        <path id="cell-Bacteria" class="cell" d="M362.75,778.17 L400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L545.42,751.07 L579.13,735.13 L611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L751.07,545.42 L756.80,529.42 L720.41,492.39 L315.53,708.86 L335.46,774.12 Z" fill="#0072B2">
+          <title>Bacteria: 70 Gt C</title>
+        </path>
+        <text class="cell-label" x="543.99" y="658.16" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Bacteria)">Bacteria</text>
+        <path id="cell-Fungi" class="cell" d="M27.30,474.13 L36.36,510.31 L48.93,545.42 L64.87,579.13 L84.04,611.12 L106.26,641.07 L131.30,668.70 L158.50,693.35 L192.41,659.58 L27.18,473.30 Z" fill="#CC79A7">
+          <title>Fungi: 12 Gt C</title>
+        </path>
+        <path id="cell-Archaea" class="cell" d="M158.93,693.74 L188.88,715.96 L220.87,735.13 L250.33,749.07 L273.31,699.10 L192.41,659.58 L158.50,693.35 Z" fill="#E69F00">
+          <title>Archaea: 7 Gt C</title>
+        </path>
+        <text class="cell-label" x="218.72" y="702.64" font-size="20.0" fill="#111111" clip-path="url(#clip-Archaea)">Archaea</text>
+        <path id="cell-Protists" class="cell" d="M763.64,510.31 L772.70,474.13 L778.17,437.25 L780.00,400.00 L779.73,394.54 L748.51,393.80 L720.41,492.39 L756.80,529.42 Z" fill="#56B4E9">
+          <title>Protists: 4 Gt C</title>
+        </path>
+        <g id="group-Animals">
+          <path id="cell-Arthropods" class="cell" d="M296.14,718.68 L273.29,711.59 L267.00,712.82 L250.33,749.07 L254.58,751.07 L283.78,761.52 L295.00,753.58 Z" fill="#833A00">
+            <title>Arthropods: 1 Gt C</title>
+          </path>
+          <path id="cell-Fish" class="cell" d="M317.65,715.80 L313.13,714.92 L296.15,718.66 L296.14,718.68 L295.00,753.58 L298.79,756.49 L313.95,758.86 L328.39,750.96 Z" fill="#964200">
+            <title>Fish: 0.7 Gt C</title>
+          </path>
+          <path id="cell-Mollusks" class="cell" d="M298.62,704.95 L273.46,699.14 L273.29,711.59 L296.14,718.68 L296.15,718.66 Z" fill="#A84A00">
+            <title>Mollusks: 0.2 Gt C</title>
+          </path>
+          <path id="cell-Annelids" class="cell" d="M325.87,772.70 L332.74,773.72 L334.68,771.56 L328.39,750.96 L313.95,758.86 L313.32,769.56 Z" fill="#BA5200">
+            <title>Annelids: 0.2 Gt C</title>
+          </path>
+          <path id="cell-Cnidarians" class="cell" d="M313.13,714.92 L313.42,708.38 L298.62,704.95 L296.15,718.66 Z" fill="#CC5A00">
+            <title>Cnidarians: 0.1 Gt C</title>
+          </path>
+          <path id="cell-Livestock" class="cell" d="M313.32,769.56 L313.95,758.86 L298.79,756.49 L296.87,765.43 Z" fill="#DE6200">
+            <title>Livestock: 0.1 Gt C</title>
+          </path>
+          <path id="cell-Humans" class="cell" d="M283.78,761.52 L289.69,763.64 L296.87,765.43 L298.79,756.49 L295.00,753.58 Z" fill="#F06A00">
+            <title>Humans: 0.06 Gt C</title>
+          </path>
+          <path id="cell-Nematodes" class="cell" d="M273.46,699.14 L273.31,699.10 L267.00,712.82 L273.29,711.59 Z" fill="#FF7203">
+            <title>Nematodes: 0.02 Gt C</title>
+          </path>
+          <path id="cell-Wildmammals" class="cell" d="M334.68,771.56 L332.74,773.72 L335.46,774.12 Z" fill="#FF7D15">
+            <title>Wild mammals: 0.007 Gt C</title>
+          </path>
+          <path id="cell-Wildbirds" class="cell" d="M315.53,708.86 L313.42,708.38 L313.13,714.92 L317.65,715.80 Z" fill="#FF8728">
+            <title>Wild birds: 0.002 Gt C</title>
+          </path>
+        </g>
+        <path id="cell-Viruses" class="cell" d="M772.70,325.87 L763.64,289.69 L751.07,254.58 L738.92,228.89 L748.51,393.80 L779.73,394.54 L778.17,362.75 Z" fill="#F0E442">
+          <title>Viruses: 0.2 Gt C</title>
+        </path>
+      </g>
+  </g>
+</svg>

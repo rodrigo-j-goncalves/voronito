@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World's 30 Largest Companies</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #chart-container { width: 100%; max-width: 800px; }
+  svg { width: 100%; height: auto; display: block; }
+  .cell {
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: opacity 150ms ease, stroke-width 150ms ease;
+  }
+  .cell.dimmed { opacity: 0.35; }
+  #hover-highlight {
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }
+  .cell-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20, 20, 20, 0.92);
+    color: #FAFAFA;
+    padding: 8px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    z-index: 10;
+  }
+  #tooltip .tt-name { font-weight: 600; font-size: 14px; }
+  #tooltip .tt-path { opacity: 0.75; font-size: 11.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div id="chart-container">
+  <svg viewBox="0 0 800 800">
+    <defs></defs>
+    <g id="voronoi-treemap"></g>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+const CELLS = [{"id": "SaudiAramco", "name": "Saudi Aramco", "color": "#833A00", "value": 20.8, "description": "Saudi Arabia. $93B annual profit.", "d": "M693.30,377.31 L710.04,369.64 L742.44,340.94 L761.40,282.57 L623.98,182.73 L577.35,261.48 L576.61,291.37 Z", "centroid": [666.2453227523265, 284.22867389148104], "area": 20155.87871554398, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a Saudi Aramco", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "ExxonMobil", "name": "ExxonMobil", "color": "#9F4600", "value": 8.7, "description": "USA. $29B annual profit.", "d": "M592.86,413.20 L607.34,416.69 L693.30,377.31 L576.61,291.37 L553.72,307.37 Z", "centroid": [612.9795541612889, 358.55074779827146], "area": 8370.05517904555, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a ExxonMobil", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Shell", "name": "Shell", "color": "#BA5200", "value": 6.5, "description": "Netherlands. $18B annual profit.", "d": "M521.69,108.41 L490.63,136.78 L517.45,209.31 L614.86,176.10 Z", "centroid": [541.5062101857188, 161.49739072187836], "area": 6350.680469849191, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a Shell", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "CNPC", "name": "CNPC", "color": "#D55E00", "value": 5.3, "description": "China. $21B annual profit.", "d": "M623.98,182.73 L614.86,176.10 L517.45,209.31 L534.77,256.13 L577.35,261.48 Z", "centroid": [568.4587220004416, 219.79283334554663], "area": 4999.839892444979, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a CNPC", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "SinopecGroup", "name": "Sinopec Group", "color": "#F06A00", "value": 1.4, "description": "China. $5B annual profit.", "d": "M553.72,307.37 L576.61,291.37 L577.35,261.48 L534.77,256.13 Z", "centroid": [558.6848143599381, 277.8609421531463], "area": 1376.5472363065492, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a Sinopec Group", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "TrafiguraGroup", "name": "Trafigura Group", "color": "#FF770C", "value": 1.1, "description": "Switzerland. $3B annual profit.", "d": "M478.29,103.43 L490.63,136.78 L521.69,108.41 L494.92,88.96 Z", "centroid": [497.3547113684829, 110.80373468731639], "area": 1048.1125276282946, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a Trafigura Group", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Glencore", "name": "Glencore", "color": "#FF8728", "value": 0.1, "description": "Switzerland. $0.4B annual profit.", "d": "M742.44,340.94 L710.04,369.64 L737.14,357.23 Z", "centroid": [729.874585687628, 355.93949781118306], "area": 187.89313785354898, "parentId": "Energy", "breadcrumb": "World's 30 Largest Companies \u203a Energy \u203a Glencore", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "ICBC", "name": "ICBC", "color": "#00664A", "value": 24.3, "description": "China. $51B annual profit.", "d": "M607.34,416.69 L592.86,413.20 L470.00,535.74 L484.83,554.59 L658.16,600.30 L693.49,491.59 Z", "centroid": [593.919354448255, 513.5179043983172], "area": 24035.477427932652, "parentId": "Finance", "breadcrumb": "World's 30 Largest Companies \u203a Finance \u203a ICBC", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "JPMorganChase", "name": "JPMorganChase", "color": "#009E73", "value": 20.3, "description": "USA. $57B annual profit.", "d": "M658.16,600.30 L484.83,554.59 L493.69,707.43 L623.36,707.43 Z", "centroid": [561.6055943476975, 638.4744047983731], "area": 19988.947139220458, "parentId": "Finance", "breadcrumb": "World's 30 Largest Companies \u203a Finance \u203a JPMorganChase", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "BerkshireHathaway", "name": "Berkshire Hathaway", "color": "#00F0AE", "value": 18.0, "description": "USA. $67B annual profit.", "d": "M493.69,707.43 L484.83,554.59 L470.00,535.74 L317.38,687.97 L323.31,707.43 Z", "centroid": [425.74966876365846, 646.4491589495381], "area": 17610.994622646438, "parentId": "Finance", "breadcrumb": "World's 30 Largest Companies \u203a Finance \u203a Berkshire Hathaway", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Toyota", "name": "Toyota", "color": "#946700", "value": 7.6, "description": "Japan. $26B annual profit.", "d": "M122.37,276.84 L77.79,254.10 L38.60,282.57 L78.96,406.81 Z", "centroid": [79.91179089772584, 313.479301539979], "area": 6399.7656736147665, "parentId": "Auto", "breadcrumb": "World's 30 Largest Companies \u203a Auto \u203a Toyota", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Volkswagen", "name": "Volkswagen", "color": "#FFC239", "value": 2.3, "description": "Germany. $8B annual profit.", "d": "M146.68,204.05 L77.79,254.10 L122.37,276.84 Z", "centroid": [115.61361574141743, 244.99391252622607], "area": 1898.6131815655208, "parentId": "Auto", "breadcrumb": "World's 30 Largest Companies \u203a Auto \u203a Volkswagen", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Nvidia", "name": "Nvidia", "color": "#1B90D2", "value": 55.6, "description": "USA. $120B annual profit.", "d": "M319.60,330.54 L303.34,410.11 L316.72,475.77 L464.70,541.03 L592.86,413.20 L535.86,259.10 L355.37,287.73 Z", "centroid": [443.26467892280436, 392.80922364616157], "area": 56718.516191389055, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Nvidia", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Microsoft", "name": "Microsoft", "color": "#229DE2", "value": 36.1, "description": "USA. $102B annual profit.", "d": "M478.29,103.43 L413.09,76.87 L341.77,62.31 L283.41,104.71 L355.37,287.73 L535.86,259.10 Z", "centroid": [405.88583384485435, 176.48832691404502], "area": 37319.500035142606, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Microsoft", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Alphabet", "name": "Alphabet", "color": "#37A6E5", "value": 32.8, "description": "USA. $132B annual profit.", "d": "M78.96,406.81 L127.49,556.15 L304.73,494.42 L316.72,475.77 L303.34,410.11 L251.14,349.78 L232.46,344.49 L82.32,396.76 Z", "centroid": [197.2956826619027, 446.23500193044316], "area": 33043.2697229603, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Alphabet", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Meta", "name": "Meta", "color": "#4CAFE8", "value": 30.1, "description": "USA. $60B annual profit.", "d": "M146.68,204.05 L138.47,228.62 L232.46,344.49 L251.14,349.78 L319.60,330.54 L355.37,287.73 L283.41,104.71 Z", "centroid": [253.1824884710782, 238.8634269484694], "area": 30758.76196227916, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Meta", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Apple", "name": "Apple", "color": "#60B9EA", "value": 26.9, "description": "USA. $112B annual profit.", "d": "M317.38,687.97 L352.09,653.35 L304.73,494.42 L127.49,556.15 L153.93,637.53 Z", "centroid": [248.65178170837538, 594.3233128973566], "area": 27105.427642814444, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Apple", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Samsung", "name": "Samsung", "color": "#75C2ED", "value": 13.3, "description": "South Korea. $31B annual profit.", "d": "M304.73,494.42 L352.09,653.35 L464.70,541.03 L316.72,475.77 Z", "centroid": [372.2793788122791, 555.099849045705], "area": 13379.159879772895, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Samsung", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Amazon", "name": "Amazon", "color": "#8ACBF0", "value": 10.8, "description": "USA. $78B annual profit.", "d": "M82.32,396.76 L232.46,344.49 L138.47,228.62 Z", "centroid": [151.0833757482449, 323.29076954618023], "area": 11154.923041109349, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Amazon", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Foxconn", "name": "Foxconn", "color": "#9ED4F2", "value": 2.3, "description": "Taiwan. $6B annual profit.", "d": "M319.60,330.54 L251.14,349.78 L303.34,410.11 Z", "centroid": [291.3591379767771, 363.4798395106963], "area": 2567.4650746945044, "parentId": "Tech", "breadcrumb": "World's 30 Largest Companies \u203a Tech \u203a Foxconn", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "UnitedHealthGroup", "name": "UnitedHealth Group", "color": "#B04380", "value": 2.7, "description": "USA. $12B annual profit.", "d": "M641.72,446.58 L671.48,472.46 L702.93,462.53 L713.94,428.64 L680.23,410.84 L646.26,434.42 Z", "centroid": [679.1380453867811, 442.1267564687392], "area": 2778.0963128071744, "parentId": "Health", "breadcrumb": "World's 30 Largest Companies \u203a Health \u203a UnitedHealth Group", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "CignaGroup", "name": "Cigna Group", "color": "#C15B94", "value": 2.2, "description": "USA. $6B annual profit.", "d": "M713.94,428.64 L737.14,357.23 L672.29,386.94 L680.23,410.84 Z", "centroid": [705.0559487249221, 393.51285612551794], "area": 2302.99537314591, "parentId": "Health", "breadcrumb": "World's 30 Largest Companies \u203a Health \u203a Cigna Group", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "McKesson", "name": "McKesson", "color": "#CC79A7", "value": 1.2, "description": "USA. $5B annual profit.", "d": "M631.12,405.80 L646.26,434.42 L680.23,410.84 L672.29,386.94 Z", "centroid": [656.5301098595497, 409.73055316780574], "area": 1231.643518824174, "parentId": "Health", "breadcrumb": "World's 30 Largest Companies \u203a Health \u203a McKesson", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "CardinalHealth", "name": "Cardinal Health", "color": "#D797BA", "value": 0.7, "description": "USA. $2B annual profit.", "d": "M641.72,446.58 L646.26,434.42 L631.12,405.80 L607.34,416.69 Z", "centroid": [629.6375178609732, 424.3478216455161], "area": 699.742392407803, "parentId": "Health", "breadcrumb": "World's 30 Largest Companies \u203a Health \u203a Cardinal Health", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "CVSHealth", "name": "CVS Health", "color": "#E2B4CE", "value": 0.4, "description": "USA. $2B annual profit.", "d": "M693.49,491.59 L702.93,462.53 L671.48,472.46 Z", "centroid": [689.3003990254934, 475.52778359290505], "area": 409.9544128984271, "parentId": "Health", "breadcrumb": "World's 30 Largest Companies \u203a Health \u203a CVS Health", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Walmart", "name": "Walmart", "color": "#004166", "value": 3.1, "description": "USA. $22B annual profit.", "d": "M176.64,707.43 L226.15,707.43 L233.26,662.01 L186.32,647.53 L164.92,671.34 Z", "centroid": [199.68298723233812, 680.0251712142666], "area": 3125.9136388295155, "parentId": "Retail", "breadcrumb": "World's 30 Largest Companies \u203a Retail \u203a Walmart", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "CostcoWholesale", "name": "Costco Wholesale", "color": "#0072B2", "value": 2.9, "description": "USA. $8B annual profit.", "d": "M317.38,687.97 L233.26,662.01 L226.15,707.43 L323.31,707.43 Z", "centroid": [268.55532962520647, 690.6580872393047], "area": 2947.5446092727216, "parentId": "Retail", "breadcrumb": "World's 30 Largest Companies \u203a Retail \u203a Costco Wholesale", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Cencora", "name": "Cencora", "color": "#05A5FF", "value": 0.5, "description": "USA. $2B annual profit.", "d": "M164.92,671.34 L186.32,647.53 L153.93,637.53 Z", "centroid": [168.38862302077544, 652.1334975235801], "area": 492.49648835689004, "parentId": "Retail", "breadcrumb": "World's 30 Largest Companies \u203a Retail \u203a Cencora", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "StateGrid", "name": "State Grid", "color": "#F0E442", "value": 2.0, "description": "China. $11B annual profit.", "d": "M494.92,88.96 L427.28,39.82 L413.09,76.87 L478.29,103.43 Z", "centroid": [450.229961259352, 74.95289521686755], "area": 2294.2521545138407, "parentId": "Utilities", "breadcrumb": "World's 30 Largest Companies \u203a Utilities \u203a State Grid", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "ChinaStateConstruction", "name": "China State Construction", "color": "#9B9B9B", "value": 1.1, "description": "China. $3B annual profit.", "d": "M427.28,39.82 L400.00,20.00 L341.77,62.31 L413.09,76.87 Z", "centroid": [392.0940780082616, 51.18287591267888], "area": 2578.934727679587, "parentId": "RealEstate", "breadcrumb": "World's 30 Largest Companies \u203a Real Estate \u203a China State Construction", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}];
+
+const svg = d3.select("svg g#voronoi-treemap");
+const tooltip = d3.select("#tooltip");
+
+const cellSel = svg.selectAll("path.cell")
+  .data(CELLS, d => d.id)
+  .enter()
+  .append("path")
+  .attr("class", "cell")
+  .attr("id", d => "cell-" + d.id)
+  .attr("d", d => d.d)
+  .attr("fill", d => d.color);
+
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
+const labelSel = svg.selectAll("text.cell-label")
+  .data(labeled)
+  .enter()
+  .append("text")
+  .attr("class", "cell-label")
+  .attr("x", d => d.centroid[0])
+  .attr("y", d => d.centroid[1])
+  .attr("font-size", d => d.labelFontSize)
+  .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
+  .text(d => d.name);
+
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
+function textColorFor(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.6 ? "#111111" : "#FAFAFA";
+}
+
+function fmtValue(v) {
+  return (Math.round(v * 1000) / 1000).toString();
+}
+
+cellSel
+  .on("mouseenter", function (event, d) {
+    cellSel.classed("dimmed", o => o.parentId !== d.parentId);
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
+
+    tooltip.html(
+      '<div class="tt-path">' + d.breadcrumb + '</div>' +
+      '<div class="tt-name">' + d.name + '</div>' +
+      '<div>' + fmtValue(d.value) + ' per $100 revenue</div>' +
+      '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
+    ).style("opacity", 1);
+  })
+  .on("mousemove", function (event) {
+    tooltip
+      .style("left", (event.clientX + 16) + "px")
+      .style("top", (event.clientY + 16) + "px");
+  })
+  .on("mouseleave", function () {
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
+    tooltip.style("opacity", 0);
+  });
+</script>
+</body>
+</html>

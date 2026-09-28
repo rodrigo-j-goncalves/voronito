@@ -34,7 +34,8 @@ python3 -m venv .venv
 | `--input` | *(required)* | Path to the input CSV |
 | `--output-svg` | | Path to write the static SVG (at least one of `--output-svg`/`--output-html` is required) |
 | `--output-html` | | Path to write the interactive HTML |
-| `--shape` | `circle` | `circle`, `rectangle`, or a path to an `.svg` file (optionally `path.svg#elementId`) to clip to an arbitrary polygon extracted from its `<path>`/`<polygon>`/`<polyline>` — the shape must be closed (a `<path>` needs an explicit `Z`; `<polyline>` is rejected as open by definition). The engine only supports **convex** clip polygons; a concave mask prints a warning and proceeds, but its concave regions (notches, waists) will be ignored/distorted in the output. |
+| `--shape` | `circle` | `circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`, `polygon:N` (any regular N-sided convex polygon, N≥3), or a path to an `.svg` file (optionally `path.svg#elementId`) to clip to an arbitrary polygon extracted from its `<path>`/`<polygon>`/`<polyline>` — the shape must be closed (a `<path>` needs an explicit `Z`; `<polyline>` is rejected as open by definition). The engine only supports **convex** clip polygons; a concave mask prints a warning and proceeds, but its concave regions (notches, waists) will be ignored/distorted in the output. |
+| `--all-shapes` | off | Generate one output per built-in shape (`circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`) instead of a single `--shape`, each suffixed `_<shape>` before the extension (e.g. `--output-svg out.svg --all-shapes` → `out_circle.svg`, `out_rectangle.svg`, ...). Applies to both `--output-svg` and `--output-html` if both are given. |
 | `--width`, `--height` | `800`, `800` | Canvas size in px |
 | `--seed` | `42` | PRNG seed for the layout (deterministic output) |
 | `--title` | `Voronoi Treemap` | `<title>` for the HTML output |
@@ -61,6 +62,19 @@ Root,,Root Category,,,
 
 - `data/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
 - `data/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
+- `data/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
+
+`examples/` holds pre-generated outputs for all three, in every built-in shape
+(`--all-shapes`) as both SVG and HTML — e.g. `examples/companies_hexagon.svg`.
+Unlike `output/` (a gitignored scratch area for your own runs), `examples/`
+is committed, so these are viewable without regenerating them. Regenerate
+with, e.g.:
+
+```bash
+.venv/bin/python src/voronoi_treemap.py --input data/companies.csv \
+  --output-svg examples/companies.svg --output-html examples/companies.html \
+  --all-shapes --unit "per \$100 revenue" --title "World's 30 Largest Companies"
+```
 
 ## Architecture
 
@@ -69,7 +83,7 @@ src/
   voronoi_treemap.py   CLI entry point
   hierarchy.py          CSV -> nested tree, id resolution
   colors.py              Okabe-Ito palette + shade assignment
-  clip_svg.py            arbitrary polygon extraction from an SVG mask (--clip-svg)
+  clip_svg.py            arbitrary polygon extraction from an SVG mask (--shape mask.svg)
   engine.py               subprocess bridge to compute_treemap.js
   compute_treemap.js     headless Node engine (d3-voronoi-treemap)
   geometry.py             shared tree+geometry merge, label fit/sizing

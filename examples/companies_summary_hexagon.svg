@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      .cell { stroke: #FFFFFF; stroke-width: 1.5; stroke-linejoin: round; }
+      .cell-label { font-family: "Helvetica Neue", Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <clipPath id="clip-Energy"><path d="M400.00,20.00 L347.04,50.57 L323.40,166.00 L546.17,283.66 L614.56,247.17 L643.77,160.74 Z"/></clipPath>
+    <clipPath id="clip-Finance"><path d="M552.70,668.83 L572.48,680.42 L729.09,590.00 L729.09,266.91 L614.56,247.17 L546.17,283.66 Z"/></clipPath>
+    <clipPath id="clip-Auto"><path d="M70.91,290.94 L235.07,177.06 L206.75,131.57 L70.91,210.00 Z"/></clipPath>
+    <clipPath id="clip-Tech"><path d="M70.91,590.00 L381.06,769.06 L552.70,668.83 L546.17,283.66 L323.40,166.00 L263.44,169.73 L235.07,177.06 L70.91,290.94 Z"/></clipPath>
+    <clipPath id="clip-Health"><path d="M729.09,210.00 L643.77,160.74 L614.56,247.17 L729.09,266.91 Z"/></clipPath>
+    <clipPath id="clip-Retail"><path d="M323.40,166.00 L347.04,50.57 L237.87,113.61 L263.44,169.73 Z"/></clipPath>
+  </defs>
+  <g id="voronoi-treemap">
+      <g id="group-Companies">
+        <path id="cell-Energy" class="cell" d="M400.00,20.00 L347.04,50.57 L323.40,166.00 L546.17,283.66 L614.56,247.17 L643.77,160.74 Z" fill="#D55E00">
+          <title>Energy: 43.9 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="477.37" y="155.12" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Energy)">Energy</text>
+        <path id="cell-Finance" class="cell" d="M552.70,668.83 L572.48,680.42 L729.09,590.00 L729.09,266.91 L614.56,247.17 L546.17,283.66 Z" fill="#009E73">
+          <title>Finance: 62.6 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="635.81" y="449.68" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Finance)">Finance</text>
+        <path id="cell-Auto" class="cell" d="M70.91,290.94 L235.07,177.06 L206.75,131.57 L70.91,210.00 Z" fill="#E69F00">
+          <title>Auto: 9.9 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="143.17" y="205.42" font-size="20.0" fill="#111111" clip-path="url(#clip-Auto)">Auto</text>
+        <path id="cell-Tech" class="cell" d="M70.91,590.00 L381.06,769.06 L552.70,668.83 L546.17,283.66 L323.40,166.00 L263.44,169.73 L235.07,177.06 L70.91,290.94 Z" fill="#56B4E9">
+          <title>Tech: 207.9 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="319.29" y="457.27" font-size="20.0" fill="#111111" clip-path="url(#clip-Tech)">Tech</text>
+        <path id="cell-Health" class="cell" d="M729.09,210.00 L643.77,160.74 L614.56,247.17 L729.09,266.91 Z" fill="#CC79A7">
+          <title>Health: 7.2 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="674.56" y="221.02" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Health)">Health</text>
+        <path id="cell-Retail" class="cell" d="M323.40,166.00 L347.04,50.57 L237.87,113.61 L263.44,169.73 Z" fill="#0072B2">
+          <title>Retail: 6.5 per $100 revenue</title>
+        </path>
+        <text class="cell-label" x="296.15" y="119.49" font-size="20.0" fill="#FAFAFA" clip-path="url(#clip-Retail)">Retail</text>
+        <path id="cell-Utilities" class="cell" d="M206.75,131.57 L235.07,177.06 L263.44,169.73 L237.87,113.61 Z" fill="#F0E442">
+          <title>Utilities: 2 per $100 revenue</title>
+        </path>
+        <path id="cell-RealEstate" class="cell" d="M572.48,680.42 L552.70,668.83 L381.06,769.06 L400.00,780.00 Z" fill="#9B9B9B">
+          <title>Real Estate: 1.1 per $100 revenue</title>
+        </path>
+      </g>
+  </g>
+</svg>

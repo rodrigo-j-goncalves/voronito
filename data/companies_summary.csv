@@ -1,0 +1,10 @@
+id,parent_id,name,value,color,description
+Companies,,World's 30 Largest Companies (by sector),,,"Sector-level rollup of data/companies.csv: each leaf's value is the sum of its sector's profit-per-$100-in-revenue figures across all companies in that sector. A simpler, flatter (2-level) example than the full per-company dataset -- useful for a quick, less cluttered demo."
+Energy,Companies,Energy,43.9,#D55E00,
+Finance,Companies,Finance,62.6,#009E73,
+Auto,Companies,Auto,9.9,#E69F00,
+Tech,Companies,Tech,207.9,#56B4E9,
+Health,Companies,Health,7.2,#CC79A7,
+Retail,Companies,Retail,6.5,#0072B2,
+Utilities,Companies,Utilities,2,#F0E442,
+RealEstate,Companies,Real Estate,1.1,#9B9B9B,

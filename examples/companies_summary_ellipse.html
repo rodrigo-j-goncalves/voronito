@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World's 30 Largest Companies (by sector)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #chart-container { width: 100%; max-width: 800px; }
+  svg { width: 100%; height: auto; display: block; }
+  .cell {
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: opacity 150ms ease, stroke-width 150ms ease;
+  }
+  .cell.dimmed { opacity: 0.35; }
+  #hover-highlight {
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }
+  .cell-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20, 20, 20, 0.92);
+    color: #FAFAFA;
+    padding: 8px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    z-index: 10;
+  }
+  #tooltip .tt-name { font-weight: 600; font-size: 14px; }
+  #tooltip .tt-path { opacity: 0.75; font-size: 11.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div id="chart-container">
+  <svg viewBox="0 0 800 800">
+    <defs></defs>
+    <g id="voronoi-treemap"></g>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+const CELLS = [{"id": "Energy", "name": "Energy", "color": "#D55E00", "value": 43.9, "description": null, "d": "M568.74,302.23 L637.31,278.13 L699.56,166.78 L693.74,158.93 L668.70,131.30 L641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L510.31,36.36 L474.13,27.30 L437.25,21.83 L402.26,20.11 L366.70,73.39 L348.23,120.32 Z", "centroid": [527.6248796031965, 150.5392469376467], "area": 57581.85118401704, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Energy", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Finance", "name": "Finance", "color": "#009E73", "value": 62.6, "description": null, "d": "M568.74,302.23 L520.21,677.01 L597.20,724.30 L611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L751.07,545.42 L763.64,510.31 L772.70,474.13 L778.17,437.25 L780.00,400.00 L778.17,362.75 L772.70,325.87 L769.30,312.28 L637.31,278.13 Z", "centroid": [647.3477221498766, 486.52778504720646], "area": 82645.30589275934, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Finance", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Auto", "name": "Auto", "color": "#E69F00", "value": 9.9, "description": null, "d": "M289.69,36.36 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L110.10,154.69 L332.26,118.41 L311.33,30.94 Z", "centroid": [241.1366062289322, 97.88445182455247], "area": 13084.420149936432, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Auto", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Tech", "name": "Tech", "color": "#56B4E9", "value": 207.9, "description": null, "d": "M568.74,302.23 L348.23,120.32 L332.26,118.41 L110.10,154.69 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L27.30,474.13 L36.36,510.31 L48.93,545.42 L64.87,579.13 L84.04,611.12 L106.26,641.07 L131.30,668.70 L158.93,693.74 L188.88,715.96 L220.87,735.13 L254.58,751.07 L289.69,763.64 L325.87,772.70 L362.75,778.17 L370.59,778.56 L520.21,677.01 Z", "centroid": [293.5396598358373, 438.96133730521063], "area": 275158.05376303906, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Tech", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Health", "name": "Health", "color": "#CC79A7", "value": 7.2, "description": null, "d": "M763.64,289.69 L751.07,254.58 L735.13,220.87 L715.96,188.88 L699.56,166.78 L637.31,278.13 L769.30,312.28 Z", "centroid": [705.6616620113078, 250.958097073876], "area": 9359.128542383114, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Health", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Retail", "name": "Retail", "color": "#0072B2", "value": 6.5, "description": null, "d": "M370.59,778.56 L400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L545.42,751.07 L579.13,735.13 L597.20,724.30 L520.21,677.01 Z", "centroid": [493.17984787787583, 735.513479395148], "area": 10321.999541190147, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Retail", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Utilities", "name": "Utilities", "color": "#F0E442", "value": 2.0, "description": null, "d": "M325.87,27.30 L315.63,29.86 L366.70,73.39 L402.26,20.11 L400.00,20.00 L362.75,21.83 Z", "centroid": [361.2854188321999, 40.065275698979626], "area": 2275.6759484126196, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Utilities", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "RealEstate", "name": "Real Estate", "color": "#9B9B9B", "value": 1.1, "description": null, "d": "M348.23,120.32 L366.70,73.39 L315.63,29.86 L311.33,30.94 L332.26,118.41 Z", "centroid": [338.43171459851493, 77.50249722710346], "area": 2491.167013095961, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Real Estate", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}];
+
+const svg = d3.select("svg g#voronoi-treemap");
+const tooltip = d3.select("#tooltip");
+
+const cellSel = svg.selectAll("path.cell")
+  .data(CELLS, d => d.id)
+  .enter()
+  .append("path")
+  .attr("class", "cell")
+  .attr("id", d => "cell-" + d.id)
+  .attr("d", d => d.d)
+  .attr("fill", d => d.color);
+
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
+const labelSel = svg.selectAll("text.cell-label")
+  .data(labeled)
+  .enter()
+  .append("text")
+  .attr("class", "cell-label")
+  .attr("x", d => d.centroid[0])
+  .attr("y", d => d.centroid[1])
+  .attr("font-size", d => d.labelFontSize)
+  .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
+  .text(d => d.name);
+
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
+function textColorFor(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.6 ? "#111111" : "#FAFAFA";
+}
+
+function fmtValue(v) {
+  return (Math.round(v * 1000) / 1000).toString();
+}
+
+cellSel
+  .on("mouseenter", function (event, d) {
+    cellSel.classed("dimmed", o => o.parentId !== d.parentId);
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
+
+    tooltip.html(
+      '<div class="tt-path">' + d.breadcrumb + '</div>' +
+      '<div class="tt-name">' + d.name + '</div>' +
+      '<div>' + fmtValue(d.value) + ' per $100 revenue</div>' +
+      '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
+    ).style("opacity", 1);
+  })
+  .on("mousemove", function (event) {
+    tooltip
+      .style("left", (event.clientX + 16) + "px")
+      .style("top", (event.clientY + 16) + "px");
+  })
+  .on("mouseleave", function () {
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
+    tooltip.style("opacity", 0);
+  });
+</script>
+</body>
+</html>

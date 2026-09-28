@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Global Biomass Distribution</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #chart-container { width: 100%; max-width: 800px; }
+  svg { width: 100%; height: auto; display: block; }
+  .cell {
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: opacity 150ms ease, stroke-width 150ms ease;
+  }
+  .cell.dimmed { opacity: 0.35; }
+  #hover-highlight {
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }
+  .cell-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20, 20, 20, 0.92);
+    color: #FAFAFA;
+    padding: 8px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    z-index: 10;
+  }
+  #tooltip .tt-name { font-weight: 600; font-size: 14px; }
+  #tooltip .tt-path { opacity: 0.75; font-size: 11.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div id="chart-container">
+  <svg viewBox="0 0 800 800">
+    <defs></defs>
+    <g id="voronoi-treemap"></g>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+const CELLS = [{"id": "Plants", "name": "Plants", "color": "#009E73", "value": 450.0, "description": "Land plants; overwhelmingly the largest biomass pool on Earth, mostly cellulose in vascular tissue.", "d": "M748.51,393.80 L738.92,228.89 L735.13,220.87 L715.96,188.88 L693.74,158.93 L668.70,131.30 L641.07,106.26 L611.12,84.04 L579.13,64.87 L545.42,48.93 L510.31,36.36 L474.13,27.30 L437.25,21.83 L400.00,20.00 L362.75,21.83 L325.87,27.30 L289.69,36.36 L254.58,48.93 L220.87,64.87 L188.88,84.04 L158.93,106.26 L131.30,131.30 L106.26,158.93 L84.04,188.88 L64.87,220.87 L48.93,254.58 L36.36,289.69 L27.30,325.87 L21.83,362.75 L20.00,400.00 L21.83,437.25 L27.18,473.30 L192.41,659.58 L273.31,699.10 L315.53,708.86 L720.41,492.39 Z", "centroid": [380.59592500292626, 346.75003846738775], "area": 368308.8148909757, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Plants", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Bacteria", "name": "Bacteria", "color": "#0072B2", "value": 70.0, "description": "Includes both terrestrial (mostly deep subsurface) and marine bacteria.", "d": "M362.75,778.17 L400.00,780.00 L437.25,778.17 L474.13,772.70 L510.31,763.64 L545.42,751.07 L579.13,735.13 L611.12,715.96 L641.07,693.74 L668.70,668.70 L693.74,641.07 L715.96,611.12 L735.13,579.13 L751.07,545.42 L756.80,529.42 L720.41,492.39 L315.53,708.86 L335.46,774.12 Z", "centroid": [543.9942155438343, 658.1617066081261], "area": 57161.84807796226, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Bacteria", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Fungi", "name": "Fungi", "color": "#CC79A7", "value": 12.0, "description": "Includes free-living and symbiotic fungi in soil and marine environments.", "d": "M27.30,474.13 L36.36,510.31 L48.93,545.42 L64.87,579.13 L84.04,611.12 L106.26,641.07 L131.30,668.70 L158.50,693.35 L192.41,659.58 L27.18,473.30 Z", "centroid": [110.2528246618852, 600.6478830801485], "area": 9702.909007747476, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Fungi", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Archaea", "name": "Archaea", "color": "#E69F00", "value": 7.0, "description": "Largely deep subsurface communities; taxonomically distinct from Bacteria.", "d": "M158.93,693.74 L188.88,715.96 L220.87,735.13 L250.33,749.07 L273.31,699.10 L192.41,659.58 L158.50,693.35 Z", "centroid": [218.724828167379, 702.6364148725687], "area": 5222.83038335765, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Archaea", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Protists", "name": "Protists", "color": "#56B4E9", "value": 4.0, "description": "Single-celled eukaryotes including algae and other microbial eukaryotes.", "d": "M763.64,510.31 L772.70,474.13 L778.17,437.25 L780.00,400.00 L779.73,394.54 L748.51,393.80 L720.41,492.39 L756.80,529.42 Z", "centroid": [753.561253619371, 457.04804750693984], "area": 5001.390287173446, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Protists", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Arthropods", "name": "Arthropods", "color": "#833A00", "value": 1.0, "description": "Mostly marine arthropods (e.g. copepods, krill); largest animal subgroup by biomass.", "d": "M296.14,718.68 L273.29,711.59 L267.00,712.82 L250.33,749.07 L254.58,751.07 L283.78,761.52 L295.00,753.58 Z", "centroid": [276.5015308885136, 736.8313335934863], "area": 1605.1769358076126, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Arthropods", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Fish", "name": "Fish", "color": "#964200", "value": 0.7, "description": "Marine and freshwater fish.", "d": "M317.65,715.80 L313.13,714.92 L296.15,718.66 L296.14,718.68 L295.00,753.58 L298.79,756.49 L313.95,758.86 L328.39,750.96 Z", "centroid": [309.7325036998942, 737.887991722658], "area": 1121.3325045845413, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Fish", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Mollusks", "name": "Mollusks", "color": "#A84A00", "value": 0.2, "description": "Includes bivalves, gastropods, cephalopods.", "d": "M298.62,704.95 L273.46,699.14 L273.29,711.59 L296.14,718.68 L296.15,718.66 Z", "centroid": [285.67030821298397, 708.569519834335], "area": 322.88458685253863, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Mollusks", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Annelids", "name": "Annelids", "color": "#BA5200", "value": 0.2, "description": "Segmented worms, including earthworms.", "d": "M325.87,772.70 L332.74,773.72 L334.68,771.56 L328.39,750.96 L313.95,758.86 L313.32,769.56 Z", "centroid": [323.9338790881402, 763.7363128292156], "area": 317.82903396066104, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Annelids", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Cnidarians", "name": "Cnidarians", "color": "#CC5A00", "value": 0.1, "description": "Jellyfish, corals, and relatives.", "d": "M313.13,714.92 L313.42,708.38 L298.62,704.95 L296.15,718.66 Z", "centroid": [304.38853533424333, 711.8017131061574], "area": 160.73022492100426, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Cnidarians", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Livestock", "name": "Livestock", "color": "#DE6200", "value": 0.1, "description": "Domesticated mammals raised by humans (cattle, pigs, etc.).", "d": "M313.32,769.56 L313.95,758.86 L298.79,756.49 L296.87,765.43 Z", "centroid": [305.9175874437691, 762.7025206879745], "area": 159.37591310523567, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Livestock", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Humans", "name": "Humans", "color": "#F06A00", "value": 0.06, "description": "Global human biomass.", "d": "M283.78,761.52 L289.69,763.64 L296.87,765.43 L298.79,756.49 L295.00,753.58 Z", "centroid": [292.87167596057725, 759.9122652908216], "area": 95.95761539234081, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Humans", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Nematodes", "name": "Nematodes", "color": "#FF7203", "value": 0.02, "description": "Roundworms; extremely numerous but small individual mass.", "d": "M273.46,699.14 L273.31,699.10 L267.00,712.82 L273.29,711.59 Z", "centroid": [271.2507068893353, 707.7280674684015], "area": 40.20217827835586, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Nematodes", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Wildmammals", "name": "Wild mammals", "color": "#FF7D15", "value": 0.007, "description": "All non-domesticated mammals combined.", "d": "M334.68,771.56 L332.74,773.72 L335.46,774.12 Z", "centroid": [334.2941954451487, 773.1347328834296], "area": 3.3296676295576617, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Wild mammals", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Wildbirds", "name": "Wild birds", "color": "#FF8728", "value": 0.002, "description": "All wild bird species combined.", "d": "M315.53,708.86 L313.42,708.38 L313.13,714.92 L317.65,715.80 Z", "centroid": [314.9858507082186, 712.3989445355137], "area": 21.720346474830876, "parentId": "Animals", "breadcrumb": "Living Earth \u203a Animals \u203a Wild birds", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "Viruses", "name": "Viruses", "color": "#F0E442", "value": 0.2, "description": "Estimated viral biomass across environments.", "d": "M772.70,325.87 L763.64,289.69 L751.07,254.58 L738.92,228.89 L748.51,393.80 L779.73,394.54 L778.17,362.75 Z", "centroid": [757.9169326597942, 330.53334684206186], "area": 3671.2703806102654, "parentId": "LivingEarth", "breadcrumb": "Living Earth \u203a Viruses", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}];
+
+const svg = d3.select("svg g#voronoi-treemap");
+const tooltip = d3.select("#tooltip");
+
+const cellSel = svg.selectAll("path.cell")
+  .data(CELLS, d => d.id)
+  .enter()
+  .append("path")
+  .attr("class", "cell")
+  .attr("id", d => "cell-" + d.id)
+  .attr("d", d => d.d)
+  .attr("fill", d => d.color);
+
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
+const labelSel = svg.selectAll("text.cell-label")
+  .data(labeled)
+  .enter()
+  .append("text")
+  .attr("class", "cell-label")
+  .attr("x", d => d.centroid[0])
+  .attr("y", d => d.centroid[1])
+  .attr("font-size", d => d.labelFontSize)
+  .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
+  .text(d => d.name);
+
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
+function textColorFor(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.6 ? "#111111" : "#FAFAFA";
+}
+
+function fmtValue(v) {
+  return (Math.round(v * 1000) / 1000).toString();
+}
+
+cellSel
+  .on("mouseenter", function (event, d) {
+    cellSel.classed("dimmed", o => o.parentId !== d.parentId);
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
+
+    tooltip.html(
+      '<div class="tt-path">' + d.breadcrumb + '</div>' +
+      '<div class="tt-name">' + d.name + '</div>' +
+      '<div>' + fmtValue(d.value) + ' Gt C</div>' +
+      '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
+    ).style("opacity", 1);
+  })
+  .on("mousemove", function (event) {
+    tooltip
+      .style("left", (event.clientX + 16) + "px")
+      .style("top", (event.clientY + 16) + "px");
+  })
+  .on("mouseleave", function () {
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
+    tooltip.style("opacity", 0);
+  });
+</script>
+</body>
+</html>

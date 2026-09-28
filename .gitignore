@@ -19,3 +19,7 @@ src/__pycache__/
 # Data
 !data/
 !data/**
+
+# Committed example outputs (output/ itself stays a gitignored scratch/build area)
+!examples/
+!examples/**

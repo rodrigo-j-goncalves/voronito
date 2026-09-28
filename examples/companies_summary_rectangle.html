@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>World's 30 Largest Companies (by sector)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  #chart-container { width: 100%; max-width: 800px; }
+  svg { width: 100%; height: auto; display: block; }
+  .cell {
+    stroke: #FFFFFF;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    transition: opacity 150ms ease, stroke-width 150ms ease;
+  }
+  .cell.dimmed { opacity: 0.35; }
+  #hover-highlight {
+    fill: none;
+    stroke: #222222;
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+    display: none;
+  }
+  .cell-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(20, 20, 20, 0.92);
+    color: #FAFAFA;
+    padding: 8px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity 120ms ease;
+    z-index: 10;
+  }
+  #tooltip .tt-name { font-weight: 600; font-size: 14px; }
+  #tooltip .tt-path { opacity: 0.75; font-size: 11.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div id="chart-container">
+  <svg viewBox="0 0 800 800">
+    <defs></defs>
+    <g id="voronoi-treemap"></g>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+const CELLS = [{"id": "Energy", "name": "Energy", "color": "#D55E00", "value": 43.9, "description": null, "d": "M800.00,280.51 L800.00,87.54 L718.52,0.00 L466.86,0.00 L443.38,44.00 L652.57,345.09 Z", "centroid": [650.1400578387553, 143.54448903220032], "area": 82729.73776329763, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Energy", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Finance", "name": "Finance", "color": "#009E73", "value": 62.6, "description": null, "d": "M800.00,800.00 L800.00,427.51 L655.30,375.41 L377.67,800.00 Z", "centroid": [643.5266549444584, 629.7724962853895], "area": 116608.42305479312, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Finance", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Auto", "name": "Auto", "color": "#E69F00", "value": 9.9, "description": null, "d": "M0.00,0.00 L0.00,146.17 L249.86,0.00 Z", "centroid": [83.28548773160603, 48.722297546067544], "area": 18260.371415379, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Auto", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Tech", "name": "Tech", "color": "#56B4E9", "value": 207.9, "description": null, "d": "M249.86,0.00 L0.00,146.17 L0.00,670.14 L221.32,800.00 L377.67,800.00 L655.30,375.41 L652.57,345.09 L443.38,44.00 L305.30,0.00 Z", "centroid": [285.52201422416715, 397.3476162355141], "area": 387953.14889544644, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Tech", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Health", "name": "Health", "color": "#CC79A7", "value": 7.2, "description": null, "d": "M800.00,280.51 L652.57,345.09 L655.30,375.41 L800.00,427.51 Z", "centroid": [742.9589972868489, 356.2162340320345], "area": 12957.636100702526, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Health", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Retail", "name": "Retail", "color": "#0072B2", "value": 6.5, "description": null, "d": "M221.32,800.00 L-0.00,670.14 L-0.00,800.00 Z", "centroid": [73.77310203894798, 756.7142096648535], "area": 14369.971622540848, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Retail", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": 20.0}, {"id": "Utilities", "name": "Utilities", "color": "#F0E442", "value": 2.0, "description": null, "d": "M718.52,0.00 L800.00,87.54 L800.00,0.00 Z", "centroid": [772.8400737808365, 29.17932096187793], "area": 3566.2869200245254, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Utilities", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}, {"id": "RealEstate", "name": "Real Estate", "color": "#9B9B9B", "value": 1.1, "description": null, "d": "M305.30,0.00 L443.38,44.00 L466.86,0.00 Z", "centroid": [405.1816541764888, 14.667447884826526], "area": 3554.4242278159472, "parentId": "Companies", "breadcrumb": "World's 30 Largest Companies (by sector) \u203a Real Estate", "pctParent": 100.0, "pctTotal": 100.0, "labelFontSize": null}];
+
+const svg = d3.select("svg g#voronoi-treemap");
+const tooltip = d3.select("#tooltip");
+
+const cellSel = svg.selectAll("path.cell")
+  .data(CELLS, d => d.id)
+  .enter()
+  .append("path")
+  .attr("class", "cell")
+  .attr("id", d => "cell-" + d.id)
+  .attr("d", d => d.d)
+  .attr("fill", d => d.color);
+
+const labeled = CELLS.filter(d => d.labelFontSize !== null);
+
+d3.select("svg defs").selectAll("clipPath")
+  .data(labeled, d => d.id)
+  .enter()
+  .append("clipPath")
+  .attr("id", d => "clip-" + d.id)
+  .append("path")
+  .attr("d", d => d.d);
+
+const labelSel = svg.selectAll("text.cell-label")
+  .data(labeled)
+  .enter()
+  .append("text")
+  .attr("class", "cell-label")
+  .attr("x", d => d.centroid[0])
+  .attr("y", d => d.centroid[1])
+  .attr("font-size", d => d.labelFontSize)
+  .attr("fill", d => textColorFor(d.color))
+  .attr("clip-path", d => "url(#clip-" + d.id + ")")
+  .text(d => d.name);
+
+const hoverHighlight = svg.append("path").attr("id", "hover-highlight");
+
+function textColorFor(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance > 0.6 ? "#111111" : "#FAFAFA";
+}
+
+function fmtValue(v) {
+  return (Math.round(v * 1000) / 1000).toString();
+}
+
+cellSel
+  .on("mouseenter", function (event, d) {
+    cellSel.classed("dimmed", o => o.parentId !== d.parentId);
+    d3.select(this).classed("dimmed", false);
+    hoverHighlight.attr("d", d.d).style("display", "inline");
+
+    tooltip.html(
+      '<div class="tt-path">' + d.breadcrumb + '</div>' +
+      '<div class="tt-name">' + d.name + '</div>' +
+      '<div>' + fmtValue(d.value) + ' per $100 revenue</div>' +
+      '<div>' + d.pctParent.toFixed(1) + '% of parent &middot; ' + d.pctTotal.toFixed(2) + '% of total</div>'
+    ).style("opacity", 1);
+  })
+  .on("mousemove", function (event) {
+    tooltip
+      .style("left", (event.clientX + 16) + "px")
+      .style("top", (event.clientY + 16) + "px");
+  })
+  .on("mouseleave", function () {
+    cellSel.classed("dimmed", false);
+    hoverHighlight.style("display", "none");
+    tooltip.style("opacity", 0);
+  });
+</script>
+</body>
+</html>

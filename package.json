@@ -1,6 +1,6 @@
 {
   "name": "voronito",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "private": true,
   "description": "Voronito: headless Node.js computation engine for hierarchical voronoi treemaps (SVG/HTML export pipeline).",
   "type": "commonjs",
