@@ -59,7 +59,7 @@ In this case, let's use the `biomass` data (from [this wonderful paper](https://
 | `--all-shapes` | off | Generate one output per built-in shape (`circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`, `teardrop`, `leaf`, `bullet`) instead of a single `--shape`, each suffixed `_<shape>` before the extension (e.g. `--output-svg out.svg --all-shapes` → `out_circle.svg`, `out_rectangle.svg`, ..., `out_teardrop.svg`). Applies to both `--output-svg` and `--output-html` if both are given. |
 | `--width`, `--height` | `800`, `800` | Canvas size in px used to *lay out* the shape (its own aspect ratio, e.g. rectangle's golden ratio, is independent of this). The exported SVG/HTML viewBox is then tightly cropped to the shape's own bounding box (+5% margin), not this nominal canvas — so a shape that doesn't fill a square canvas (e.g. rectangle) isn't left with a visibly empty margin. |
 | `--seed` | `42` | PRNG seed for the layout (deterministic output) |
-| `--title` | `voronito (Voronoi Treemap) - Rodrigo J. Gonçalves` | `<title>` for the HTML output |
+| `--title` | `voronito (Voronoi Treemap)` | `<title>` for the HTML output |
 | `--unit` | *(none)* | Unit label appended to values in tooltips, e.g. `"Gt C"`, `"USD"` |
 
 ## CSV data format
