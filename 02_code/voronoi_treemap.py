@@ -132,7 +132,11 @@ def main() -> None:
     parser.add_argument("--width", type=float, default=800)
     parser.add_argument("--height", type=float, default=800)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--title", default="Voronoi Treemap", help="Title for the HTML output")
+    parser.add_argument(
+        "--title",
+        default="voronito (Voronoi Treemap) - Rodrigo J. Gonçalves",
+        help="Title for the HTML output",
+    )
     parser.add_argument("--unit", default="", help="Unit label appended to values in tooltips (e.g. 'Gt C', 'USD')")
     args = parser.parse_args()
 

@@ -1,10 +1,16 @@
 # voronito
+A 'pretty Voronoi treemap'
 
-Command-line pipeline that turns a hierarchical CSV into a voronoi treemap:
-a Python orchestrator drives a headless Node.js computation engine
-(`d3-voronoi-treemap`), then exports either a clean, Inkscape/`progresSVG`-ready
-**SVG** or a self-contained, D3-driven interactive **HTML** (embeddable in
-Quarto via `<iframe>`).
+
+
+Turn a **CSV** into a **voronoi treemap of custom shapes**
+
+---
+
+**voronito** is a command-line pipeline that turns a hierarchical CSV into a voronoi treemap:
+- a Python script drives a headless Node.js computation engine (`d3-voronoi-treemap`)
+- then it can export either an Inkscape/[`progresSVG`](https://github.com/rodrigo-j-goncalves/progressvg)-ready **SVG**, or a self-contained, D3-driven interactive **HTML** (embeddable in Quarto via `<iframe>`).
+
 
 ## Folder structure
 
@@ -31,6 +37,8 @@ python3 -m venv .venv
 
 ## Usage
 
+In this case, let's use the `biomass` data (from [this wonderful paper](https://doi.org/10.1073/pnas.1711842115))
+
 ```bash
 .venv/bin/python 02_code/voronoi_treemap.py \
   --input 01_data/biomass.csv \
@@ -51,7 +59,7 @@ python3 -m venv .venv
 | `--all-shapes` | off | Generate one output per built-in shape (`circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`, `teardrop`, `leaf`, `bullet`) instead of a single `--shape`, each suffixed `_<shape>` before the extension (e.g. `--output-svg out.svg --all-shapes` → `out_circle.svg`, `out_rectangle.svg`, ..., `out_teardrop.svg`). Applies to both `--output-svg` and `--output-html` if both are given. |
 | `--width`, `--height` | `800`, `800` | Canvas size in px used to *lay out* the shape (its own aspect ratio, e.g. rectangle's golden ratio, is independent of this). The exported SVG/HTML viewBox is then tightly cropped to the shape's own bounding box (+5% margin), not this nominal canvas — so a shape that doesn't fill a square canvas (e.g. rectangle) isn't left with a visibly empty margin. |
 | `--seed` | `42` | PRNG seed for the layout (deterministic output) |
-| `--title` | `Voronoi Treemap` | `<title>` for the HTML output |
+| `--title` | `voronito (Voronoi Treemap) - Rodrigo J. Gonçalves` | `<title>` for the HTML output |
 | `--unit` | *(none)* | Unit label appended to values in tooltips, e.g. `"Gt C"`, `"USD"` |
 
 ## CSV data format
@@ -86,9 +94,12 @@ so check `git status` before committing if you've been experimenting.
 Regenerate the committed set with, e.g.:
 
 ```bash
-.venv/bin/python 02_code/voronoi_treemap.py --input 01_data/companies.csv \
-  --output-svg 03_output/companies.svg --output-html 03_output/companies.html \
-  --all-shapes --unit "per \$100 revenue" --title "World's 30 Largest Companies"
+.venv/bin/python 02_code/voronoi_treemap.py \
+  --input 01_data/companies.csv \
+  --output-svg 03_output/companies.svg \
+  --output-html 03_output/companies.html \
+  --all-shapes --unit "per \$100 revenue" \
+  --title "World's 30 Largest Companies"
 ```
 
 ## Architecture
@@ -114,3 +125,7 @@ geometrically identical.
 
 - Labels are omitted (not truncated) when a cell is too narrow to fit them — checked against the cell's actual width at the label's row, not just its bounding box, since voronoi cells are frequently wedge-shaped.
 - Datasets with an extreme value range (many orders of magnitude between largest and smallest leaf, e.g. `biomass.csv`) will make the smallest leaves visually negligible regardless of layout settings — this is an inherent limitation of area-proportional treemaps, not a bug.
+
+## License & Credits
+- MIT Rodrigo J. Gonçalves
+- I _claudeveloped_ this :)
