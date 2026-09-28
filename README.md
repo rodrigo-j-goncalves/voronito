@@ -48,7 +48,7 @@ python3 -m venv .venv
 | `--output-svg` | | Path to write the static SVG (at least one of `--output-svg`/`--output-html` is required) |
 | `--output-html` | | Path to write the interactive HTML |
 | `--shape` | `circle` | `circle`, `rectangle` (golden-ratio proportions, φ≈1.618:1 — independent of the canvas's own aspect ratio), `square` (equal sides), `ellipse`, `triangle`, `pentagon`, `hexagon`, `polygon:N` (any regular N-sided convex polygon, N≥3), or a path to an `.svg` file (optionally `path.svg#elementId`) to clip to an arbitrary polygon extracted from its `<path>`/`<polygon>`/`<polyline>` — the shape must be closed (a `<path>` needs an explicit `Z`; `<polyline>` is rejected as open by definition). The engine only supports **convex** clip polygons; a concave mask prints a warning and proceeds, but its concave regions (notches, waists) will be ignored/distorted in the output. |
-| `--all-shapes` | off | Generate one output per built-in shape (`circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`) instead of a single `--shape`, each suffixed `_<shape>` before the extension (e.g. `--output-svg out.svg --all-shapes` → `out_circle.svg`, `out_rectangle.svg`, ...). Applies to both `--output-svg` and `--output-html` if both are given. |
+| `--all-shapes` | off | Generate one output per built-in shape (`circle`, `rectangle`, `square`, `ellipse`, `triangle`, `pentagon`, `hexagon`, `teardrop`, `leaf`, `bullet`) instead of a single `--shape`, each suffixed `_<shape>` before the extension (e.g. `--output-svg out.svg --all-shapes` → `out_circle.svg`, `out_rectangle.svg`, ..., `out_teardrop.svg`). Applies to both `--output-svg` and `--output-html` if both are given. |
 | `--width`, `--height` | `800`, `800` | Canvas size in px used to *lay out* the shape (its own aspect ratio, e.g. rectangle's golden ratio, is independent of this). The exported SVG/HTML viewBox is then tightly cropped to the shape's own bounding box (+5% margin), not this nominal canvas — so a shape that doesn't fill a square canvas (e.g. rectangle) isn't left with a visibly empty margin. |
 | `--seed` | `42` | PRNG seed for the layout (deterministic output) |
 | `--title` | `Voronoi Treemap` | `<title>` for the HTML output |
@@ -76,7 +76,7 @@ Root,,Root Category,,,
 - `01_data/biomass.csv` — global biomass by domain/phylum (Bar-On, Phillips & Milo, *PNAS* 2018), order-of-magnitude figures.
 - `01_data/companies.csv` — reproduction of Visual Capitalist's ["World's 30 Largest Companies: Profit per $100 in Revenue"](https://www.visualcapitalist.com/ranked-how-profitable-are-the-worlds-largest-companies/) (Fortune Global 500, 2026 fiscal data); wedge size = the profit-per-$100 rate shown on each cell.
 - `01_data/companies_summary.csv` — sector-level rollup of `companies.csv` (2-level hierarchy: root → 8 sectors, no individual companies); a simpler, less cluttered example.
-- `01_data/mask_teardrop.svg`, `mask_leaf.svg`, `mask_bullet.svg` — convex real-object silhouettes (a raindrop, a simple leaf with no stem notch, a bullet pointing right), for `--shape mask_<name>.svg#<id>`.
+- `01_data/mask_teardrop.svg`, `mask_leaf.svg`, `mask_bullet.svg` — convex real-object silhouettes (a raindrop, a simple leaf with no stem notch, a bullet pointing right). Usable directly by name: `--shape teardrop` / `leaf` / `bullet`.
 
 `03_output/` holds pre-generated, committed outputs for all three CSV
 datasets, in every built-in shape (`--all-shapes`) as both SVG and HTML —

@@ -30,7 +30,13 @@ from clip_svg import extract_polygon
 from geometry import bounding_box
 
 _NAMED_REGULAR_POLYGONS = {"triangle": 3, "pentagon": 5, "hexagon": 6}
-_ALL_SHAPES = ("circle", "rectangle", "square", "ellipse", *_NAMED_REGULAR_POLYGONS)
+_DATA_DIR = Path(__file__).resolve().parent.parent / "01_data"
+_NAMED_MASKS = {
+    "teardrop": _DATA_DIR / "mask_teardrop.svg#teardrop",
+    "leaf": _DATA_DIR / "mask_leaf.svg#leaf",
+    "bullet": _DATA_DIR / "mask_bullet.svg#bullet",
+}
+_ALL_SHAPES = ("circle", "rectangle", "square", "ellipse", *_NAMED_REGULAR_POLYGONS, *_NAMED_MASKS)
 
 
 def _is_svg_shape(value: str) -> bool:
@@ -38,6 +44,9 @@ def _is_svg_shape(value: str) -> bool:
 
 
 def _build_shape(shape_value: str, width: float, height: float) -> dict:
+    if shape_value in _NAMED_MASKS:
+        shape_value = str(_NAMED_MASKS[shape_value])
+
     if _is_svg_shape(shape_value):
         points = extract_polygon(shape_value, width, height)
         return {"type": "polygon", "points": points}
@@ -106,8 +115,9 @@ def main() -> None:
         default="circle",
         help=(
             "Bounding shape: 'circle', 'rectangle', 'square', 'ellipse', 'triangle', "
-            "'pentagon', 'hexagon', 'polygon:N' (regular N-gon), or a path to an .svg "
-            "file (optionally 'path.svg#elementId') to clip to an arbitrary closed polygon"
+            "'pentagon', 'hexagon', 'polygon:N' (regular N-gon), 'teardrop'/'leaf'/'bullet' "
+            "(named convex real-object masks), or a path to an .svg file (optionally "
+            "'path.svg#elementId') to clip to an arbitrary closed polygon"
         ),
     )
     parser.add_argument(
