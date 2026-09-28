@@ -129,7 +129,7 @@ d3.select("svg defs").selectAll("clipPath")
   .append("path")
   .attr("d", d => d.d);
 
-svg.selectAll("text.cell-label")
+const labelSel = svg.selectAll("text.cell-label")
   .data(labeled)
   .enter()
   .append("text")
@@ -158,6 +158,7 @@ cellSel
   .on("mouseenter", function (event, d) {{
     cellSel.classed("dimmed", o => o.parentId !== d.parentId);
     d3.select(this).classed("dimmed", false).classed("hovered", true).raise();
+    labelSel.raise();
 
     tooltip.html(
       '<div class="tt-path">' + d.breadcrumb + '</div>' +
